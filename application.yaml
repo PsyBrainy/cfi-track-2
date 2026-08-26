@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: alkemy-wallet
+  datasource:
+    url: jdbc:postgresql://localhost:5433/alkemy-wallet-db?sslmode=disable
+    username: alkemy
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-init-sql: SET TIME ZONE 'UTC'
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time_zone: UTC
+server:
+  port: 8080
+  address: 0.0.0.0
+logging:
+  level:
+    root: INFO
+    com:
+      control:
+        alkemy-wallet: DEBUG
+    org:
+      springframework:
+        web: INFO

@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:17
+    container_name: alkemy-wallet-db
+    environment:
+      POSTGRES_USER: alkemy
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: alkemy-wallet-db
+      TZ: UTC
+      PGTZ: UTC
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alkemy -d alekmy-wallet-db"]
+      interval: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: alkemy-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@alkywall.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  pgdata:
+  pgadmin_data:
