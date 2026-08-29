@@ -1,4 +1,6 @@
-
+/* ============================
+   Variables de marca: Alkywall
+   ============================ */
 :root {
   /* Colores primarios */
   --color-primary: #2563eb;
@@ -188,6 +190,74 @@ a {
 .card p {
   color: var(--color-text-muted);
   font-size: 0.95rem;
+}
+
+/* ================================================== */
+/* Sección de registro (líneas 198-284)                */
+/* ================================================== */
+.auth-section {
+  max-width: 420px; /* mismo ancho que tenía .register */
+  margin: var(--spacing-lg) auto 0; /* centrado con espacio arriba */
+  background-color: var(--color-surface); /* fondo blanco, igual que .card */
+  border: 1px solid var(--color-border); /* borde sutil consistente con el resto */
+  border-radius: var(--radius); /* mismos bordes redondeados de la marca */
+  padding: var(--spacing-lg); /* aire interno */
+}
+
+/* Oculta toda la sección hasta que se clickee "Empezar ahora" */
+.auth-section--hidden {
+  display: none;
+}
+
+.auth-section h2 {
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-primary);
+}
+
+.auth-form {
+  display: flex; /* Flexbox: apila los campos verticalmente */
+  flex-direction: column; /* dirección vertical */
+  gap: var(--spacing-md); /* separación entre inputs */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.form-group input {
+  padding: 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 1rem;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-group input.input--error {
+  border-color: #dc2626;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.85rem;
+  min-height: 1em; /* evita que el layout salte cuando aparece/desaparece */
+}
+
+.auth-form .btn {
+  margin-top: var(--spacing-sm); /* separa el botón submit de los inputs */
 }
 
 /* ============================
