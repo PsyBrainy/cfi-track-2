@@ -256,6 +256,21 @@ a {
   min-height: 1em; /* evita que el layout salte cuando aparece/desaparece */
 }
 
+/* Mensaje general de error del servidor (401/403), va vacío hasta que el JS lo llena */
+.form-feedback {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Variante de error: la agrega el JS cuando el login falla por credenciales inválidas */
+.form-feedback--error {
+  color: #dc2626;
+  background-color: #fef2f2; /* fondo rojo muy suave para resaltar el bloque */
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  padding: var(--spacing-sm);
+}
+
 .auth-form .btn {
   margin-top: var(--spacing-sm); /* separa el botón submit de los inputs */
 }

@@ -25,6 +25,8 @@
                 <li><a href="#billetera">Mi billetera</a></li>
                 <li><a href="#movimientos">Movimientos</a></li>
                 <li><a href="#contacto">Contacto</a></li>
+                <!-- Link que abre la pantalla de login -->
+                <li><a href="#login" id="nav-login-link">Iniciar sesión</a></li>
             </ul>
         </nav>
     </div>
@@ -34,7 +36,7 @@
     <section id="inicio" class="hero">
         <h1>Bienvenido a Alkywall</h1>
         <p>Tu billetera virtual simple, ordenada y segura.</p>
-        <button class="btn btn--primary">Empezar ahora</button>
+        <button class="btn btn--primary" id="start-button">Empezar ahora</button>
     </section>
 
     <section id="billetera" class="cards">
@@ -79,6 +81,33 @@
             </div>
 
             <button type="submit" class="btn btn--primary">Registrarme</button>
+        </form>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- Sección de login: líneas 86-104 -->
+    <!-- Arranca oculta con "auth-section--hidden", la muestra el link "Iniciar sesión" del nav -->
+    <!-- ============================================ -->
+    <section id="login" class="auth-section auth-section--hidden">
+        <h2>Iniciar sesión</h2>
+
+        <form id="login-form" class="auth-form" novalidate>
+            <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="text" id="login-email" name="login-email" placeholder="tuemail@ejemplo.com">
+                <span class="error-message" id="login-email-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="login-password">Contraseña</label>
+                <input type="password" id="login-password" name="login-password" placeholder="Tu contraseña">
+                <span class="error-message" id="login-password-error"></span>
+            </div>
+
+            <!-- Mensaje general de error del servidor (401/403), distinto del error por campo -->
+            <div class="form-feedback" id="login-feedback"></div>
+
+            <button type="submit" class="btn btn--primary">Ingresar</button>
         </form>
     </section>
 </main>

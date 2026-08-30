@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
     private static final String SECRET_KEY = "SomeSecretKey";
-    private static final String TOKEN_EXPIRATION =;
+    private static final String TOKEN_EXPIRATION ="";
 
 
 
