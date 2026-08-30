@@ -44,41 +44,140 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Validación del formulario de registro: líneas 47-110
+  // ============================================================
+  // Formulario de REGISTRO: líneas 48-259
+  // Campos requeridos por el backend en /api/auth/register:
+  // name, lastName, email, password, birthDate, gender, dni,
+  // phoneNumber, employment, address, city, province, postalCode
+  // ============================================================
   const registerForm = document.getElementById('register-form');
 
+  // --- Provincias y ciudades vía API pública de Georef (datos.gob.ar) ---
+  // Documentación: https://datosgobar.github.io/georef-ar-api/
+  const GEOREF_BASE = 'https://apis.datos.gob.ar/georef/api';
+
   if (registerForm) {
-    const nombreInput = document.getElementById('nombre'); // input de nombre
-    const emailInput = document.getElementById('email'); // input de email
-    const passwordInput = document.getElementById('password'); // input de contraseña
+    // --- Captura de todos los inputs con getElementById ---
+    const nombreInput = document.getElementById('nombre');
+    const apellidoInput = document.getElementById('apellido');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const fechaNacimientoInput = document.getElementById('fechaNacimiento');
+    const generoInput = document.getElementById('genero');
+    const dniInput = document.getElementById('dni');
+    const telefonoInput = document.getElementById('telefono');
+    const ocupacionInput = document.getElementById('ocupacion');
+    const direccionInput = document.getElementById('direccion');
+    const provinciaInput = document.getElementById('provincia');
+    const ciudadInput = document.getElementById('ciudad');
+    const codigoPostalInput = document.getElementById('codigoPostal');
+    const registerFeedback = document.getElementById('register-feedback');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regex básica: algo@algo.algo
     const MIN_PASSWORD_LENGTH = 8; // longitud mínima requerida
 
+    // Carga las 24 provincias apenas se abre la página y llena el <select>
+    async function cargarProvincias() {
+      try {
+        const response = await fetch(`${GEOREF_BASE}/provincias?campos=nombre&orden=nombre&max=24`);
+        const data = await response.json();
+
+        provinciaInput.innerHTML = '<option value="">Seleccioná una provincia</option>';
+        data.provincias.forEach((provincia) => {
+          const option = document.createElement('option');
+          option.value = provincia.nombre;
+          option.textContent = provincia.nombre;
+          provinciaInput.appendChild(option);
+        });
+
+        provinciaInput.disabled = false; // habilita el select una vez cargado
+      } catch (error) {
+        provinciaInput.innerHTML = '<option value="">No se pudieron cargar las provincias</option>';
+        console.error('Error al cargar provincias desde Georef:', error);
+      }
+    }
+
+    // Carga las ciudades (municipios) de la provincia elegida
+    async function cargarCiudades(nombreProvincia) {
+      ciudadInput.disabled = true;
+      ciudadInput.innerHTML = '<option value="">Cargando ciudades...</option>';
+
+      try {
+        const url = `${GEOREF_BASE}/municipios?provincia=${encodeURIComponent(nombreProvincia)}&campos=nombre&orden=nombre&max=300`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        ciudadInput.innerHTML = '<option value="">Seleccioná una ciudad</option>';
+        data.municipios.forEach((municipio) => {
+          const option = document.createElement('option');
+          option.value = municipio.nombre;
+          option.textContent = municipio.nombre;
+          ciudadInput.appendChild(option);
+        });
+
+        ciudadInput.disabled = false; // habilita el select una vez cargado
+      } catch (error) {
+        ciudadInput.innerHTML = '<option value="">No se pudieron cargar las ciudades</option>';
+        console.error('Error al cargar ciudades desde Georef:', error);
+      }
+    }
+
+    cargarProvincias(); // dispara la carga inicial de provincias
+
+    // Cuando el usuario elige una provincia, se cargan sus ciudades
+    provinciaInput.addEventListener('change', () => {
+      if (!provinciaInput.value) {
+        ciudadInput.disabled = true;
+        ciudadInput.innerHTML = '<option value="">Elegí primero una provincia</option>';
+        return;
+      }
+      cargarCiudades(provinciaInput.value);
+    });
+
+    // --- Mostrar/limpiar error debajo de un input puntual ---
     function mostrarError(input, mensaje) {
-      const errorSpan = document.getElementById(`${input.id}-error`); // busca el <span> asociado al input
-      errorSpan.textContent = mensaje; // muestra el mensaje de error debajo del input
-      input.classList.add('input--error'); // pinta el borde del input en rojo
+      const errorSpan = document.getElementById(`${input.id}-error`);
+      errorSpan.textContent = mensaje;
+      input.classList.add('input--error');
     }
 
     function limpiarError(input) {
-      const errorSpan = document.getElementById(`${input.id}-error`); // busca el <span> asociado al input
-      errorSpan.textContent = ''; // borra el mensaje de error
-      input.classList.remove('input--error'); // saca el borde rojo
+      const errorSpan = document.getElementById(`${input.id}-error`);
+      errorSpan.textContent = '';
+      input.classList.remove('input--error');
+    }
+
+    // --- Mensaje general de error del servidor ---
+    function mostrarFeedbackRegistro(mensaje) {
+      registerFeedback.textContent = mensaje;
+      registerFeedback.classList.add('form-feedback--error');
+    }
+
+    function limpiarFeedbackRegistro() {
+      registerFeedback.textContent = '';
+      registerFeedback.classList.remove('form-feedback--error');
+    }
+
+    // Helper genérico para los campos que solo necesitan "no estar vacío"
+    function validarNoVacio(input, mensaje) {
+      if (input.value.trim() === '') {
+        mostrarError(input, mensaje);
+        return false;
+      }
+      limpiarError(input);
+      return true;
     }
 
     registerForm.addEventListener('submit', (event) => {
       event.preventDefault(); // evita la recarga de página / request innecesario
 
+      limpiarFeedbackRegistro(); // saca cualquier error de servidor de un intento anterior
+
       let esValido = true; // asumimos válido hasta encontrar un error
 
-      // Nombre: no vacío
-      if (nombreInput.value.trim() === '') {
-        mostrarError(nombreInput, 'El nombre no puede estar vacío.');
-        esValido = false;
-      } else {
-        limpiarError(nombreInput);
-      }
+      // Nombre y apellido: no vacíos
+      if (!validarNoVacio(nombreInput, 'El nombre no puede estar vacío.')) esValido = false;
+      if (!validarNoVacio(apellidoInput, 'El apellido no puede estar vacío.')) esValido = false;
 
       // Email: no vacío y formato válido
       if (emailInput.value.trim() === '') {
@@ -102,15 +201,72 @@ document.addEventListener('DOMContentLoaded', () => {
         limpiarError(passwordInput);
       }
 
-      if (esValido) {
-        console.log('Formulario válido, listo para enviar al servidor');
-        // Acá luego se agrega el fetch/POST al backend (alkywallet)
+      // Fecha de nacimiento, género, DNI, teléfono, ocupación, dirección: no vacíos
+      if (!validarNoVacio(fechaNacimientoInput, 'Ingresá tu fecha de nacimiento.')) esValido = false;
+      if (!validarNoVacio(generoInput, 'Seleccioná una opción.')) esValido = false;
+      if (!validarNoVacio(dniInput, 'El DNI no puede estar vacío.')) esValido = false;
+      if (!validarNoVacio(telefonoInput, 'El teléfono no puede estar vacío.')) esValido = false;
+      if (!validarNoVacio(ocupacionInput, 'Seleccioná una opción.')) esValido = false;
+      if (!validarNoVacio(direccionInput, 'La dirección no puede estar vacía.')) esValido = false;
+
+      // Provincia y ciudad: no vacías
+      if (!validarNoVacio(provinciaInput, 'Seleccioná una provincia.')) esValido = false;
+      if (!validarNoVacio(ciudadInput, 'Seleccioná una ciudad.')) esValido = false;
+
+      // Código postal: no vacío
+      if (!validarNoVacio(codigoPostalInput, 'El código postal no puede estar vacío.')) esValido = false;
+
+      // Si la validación del navegador falla, no se hace ningún request
+      if (!esValido) {
+        return;
       }
+
+      // --- Petición POST al backend con los 13 campos requeridos ---
+      fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: nombreInput.value.trim(),
+          lastName: apellidoInput.value.trim(),
+          email: emailInput.value.trim(),
+          password: passwordInput.value,
+          birthDate: fechaNacimientoInput.value, // formato YYYY-MM-DD que entrega <input type="date">
+          gender: generoInput.value,
+          dni: dniInput.value.trim(),
+          phoneNumber: telefonoInput.value.trim(),
+          employment: ocupacionInput.value,
+          address: direccionInput.value.trim(),
+          city: ciudadInput.value,
+          province: provinciaInput.value,
+          postalCode: codigoPostalInput.value.trim()
+        })
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log('Registro exitoso');
+            // Acá luego se puede redirigir al login o mostrar un mensaje de éxito
+            return;
+          }
+
+          // Cualquier error del servidor (400, 409 email duplicado, etc.)
+          return response.json()
+            .then((data) => {
+              mostrarFeedbackRegistro(data.message || 'No se pudo completar el registro.');
+            })
+            .catch(() => {
+              mostrarFeedbackRegistro('No se pudo completar el registro.');
+            });
+        })
+        .catch(() => {
+          mostrarFeedbackRegistro('No se pudo conectar con el servidor.');
+        });
     });
   }
 
   // ============================================================
-  // Formulario de LOGIN: líneas 112-220
+  // Formulario de LOGIN: líneas 268-376
   // ============================================================
 
   // --- Captura del form y sus inputs con getElementById ---
