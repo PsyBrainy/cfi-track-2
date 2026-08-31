@@ -8,8 +8,6 @@ import lombok.Setter;
 
 /**
  * Estructura de respuesta uniforme para cualquier error de la API.
- * Se usa desde el GlobalExceptionHandler para que el frontend siempre reciba
- * el mismo shape de error, sin importar la excepción interna que lo originó.
  */
 @Getter
 @Setter

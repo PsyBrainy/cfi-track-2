@@ -64,7 +64,7 @@ public class AuthService {
         user.setDni(userDto.getDni());
         user.setCity(userDto.getCity());
         user.setProvince(userDto.getProvince());
-        user.setCountry(userDto.getCountry());
+        user.setCountry("Argentina");
         user.setPostalCode(userDto.getPostalCode());
         user.setGender(userDto.getGender());
         user.setEmployment(userDto.getEmployment());
@@ -87,7 +87,7 @@ public class AuthService {
                 .orElseThrow(() -> new BadCredentialsException("Email o contraseña inválidos"));
 
         // El AuthenticationManager delega en DatabaseUserDetailsService + PasswordEncoder
-        // para comparar la contraseña ingresada contra el lacontraseña con BCrypt almacenado.
+        // para comparar la contraseña ingresada contra lacontraseña con BCrypt almacenado.
         Authentication authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken.unauthenticated(
                         request.getEmail(),

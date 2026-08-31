@@ -24,8 +24,6 @@ public class UserDto {
     @Size(max = 30, message = "El apellido no puede superar los 30 caracteres.")
     private String lastName;
 
-    // @NotBlank/@Size no son válidos sobre BigInteger (solo aplican a CharSequence);
-    // se usa @NotNull para exigir presencia del dato.
     @NotNull(message = "El número de teléfono es obligatorio.")
     private BigInteger phoneNumber;
 
@@ -41,8 +39,6 @@ public class UserDto {
     @Size(max = 50, message ="La dirección no puede superar los 50 caracteres.")
     private String address;
 
-    // @NotBlank/@Size no son válidos sobre BigInteger (solo aplican a CharSequence);
-    // se usa @NotNull para exigir presencia del dato.
     @NotNull(message = "El DNI es obligatorio.")
     private BigInteger dni;
 
@@ -53,10 +49,6 @@ public class UserDto {
     @NotBlank(message = "La provincia es obligatoria.")
     @Size(max = 50, message ="La provincia no puede superar los 50 caracteres.")
     private String province;
-
-    @NotBlank(message = "El país es obligatorio.")
-    @Size(max = 50, message ="El país no puede superar los 50 caracteres.")
-    private String country;
 
     @NotBlank(message = "El código postal es obligatorio.")
     @Size(max = 15, message ="El código postal no puede superar los 15 caracteres.")

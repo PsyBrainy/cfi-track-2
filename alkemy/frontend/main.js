@@ -1,5 +1,5 @@
 // main.js — punto de entrada de la app Alkywall
-
+const BaseUrl = 'http://localhost:8080'; // Url Base, en local, si se sube el proyecto a un servidor cambiar esta URL
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Alkywall: app inicializada');
 
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // --- Petición POST al backend con los 13 campos requeridos ---
-      fetch('/api/auth/register', {
+      fetch(`${BaseUrl}/api/auth/register`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // --- Petición POST al backend con fetch ---
-      fetch('/api/auth/login', {
+      fetch(`${BaseUrl}/api/auth/login`, {
         method: 'POST', // verbo POST, como pide la consigna
         headers: {
           'Content-Type': 'application/json' // le avisamos al backend que mandamos JSON
