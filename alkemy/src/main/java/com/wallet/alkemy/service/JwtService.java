@@ -1,18 +1,24 @@
 package com.wallet.alkemy.service;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import org.hibernate.mapping.List;
-import org.springframework.cglib.core.internal.Function;
+import java.security.Key;
+import java.util.Date;
+import java.util.Map;
+import java.util.function.Function;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import com.wallet.alkemy.exception.JwtValidationException;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
@@ -62,7 +68,8 @@ public class JwtService {
             return e.getClaims();
 
         } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
-            throw new RuntimeException("Invalid JWT token or mal formed", e);
+            // No exponemos el detalle interno del token al llamador; solo se loguea server-side.
+            throw new JwtValidationException("Token JWT inválido o mal formado", e);
         }
     }
 
