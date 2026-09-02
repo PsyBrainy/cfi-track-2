@@ -1,12 +1,17 @@
 package com.wallet.alkemy.models;
 
-import jakarta.persistence.*;
+import java.math.BigInteger;
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import java.math.BigInteger;
-import java.time.LocalDate;
 
 
 
@@ -35,6 +40,9 @@ public class tableTransaction {
 
     @Column (name = "Type") // Type es el tipo de transaccion (Extraccion, deposito, pago, etc)
     private String type;
+
+    @Column(name = "Movement_Type")
+    private String movementType; // INGRESO o EGRESO
 
     @Column (name = "Account_Number")
     private BigInteger AccountNumber;
