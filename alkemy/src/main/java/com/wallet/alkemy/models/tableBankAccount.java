@@ -1,15 +1,24 @@
 package com.wallet.alkemy.models;
 
-import jakarta.persistence.*;
-import lombok.Data;
 import java.math.BigInteger;
-import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 
 @Data
 @Entity (name = "bankAccount")
 @Table (name = "bankAccount")
+@NoArgsConstructor
+@AllArgsConstructor
 
 
 public class tableBankAccount {
