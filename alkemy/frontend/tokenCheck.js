@@ -3,6 +3,10 @@
 // Crear una función asíncrona en JavaScript (async/await)
 // que se ejecute al cargar la página del dashboard (usando el evento DOMContentLoaded).
 
+import { BaseUrl } from './js/config.js';
+
+// Endpoint del balance de la cuenta.
+const URL_BALANCE = `${BaseUrl}/api/account/balance`;
 
 document.addEventListener('DOMContentLoaded', async () => {
 
