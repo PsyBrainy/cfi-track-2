@@ -41,7 +41,7 @@ public class tableUser implements UserDetails {
     @Column (name = "Name")
     private String name;
 
-    @Column (name = "Last Name")
+    @Column (name = "Last_Name")
     private String lastName;
 
     @Column (name = "Email", nullable = false, unique = true)
