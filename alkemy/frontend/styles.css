@@ -191,6 +191,37 @@ a {
   color: var(--color-text-muted);
   font-size: 0.95rem;
 }
+/*
+Dashboard: tarjeta de balance
+clases con prefijo "dashboard" - para evitar colisiones con el resto
+de la app(equivalencia practica a CSS Modules)
+
+
+*/
+.dashboard--card {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+.dashboard--title{
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-primary)
+}
+.dashboard--desc {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-bottom: var(--spacing-md);
+}
+.dashboard--saldo{
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
 
 /* ================================================== */
 /* Sección de registro/login (líneas 198-303)          */
@@ -264,7 +295,7 @@ a {
 .form-group select:focus {
   outline: none;
   border-color: var(--color-primary);
-}
+}gi
 
 .form-group select:disabled {
   background-color: var(--color-bg); /* gris para marcar visualmente que está deshabilitado */
@@ -294,6 +325,15 @@ a {
   color: #dc2626;
   background-color: #fef2f2; /* fondo rojo muy suave para resaltar el bloque */
   border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  padding: var(--spacing-sm);
+}
+
+/* Variante de éxito: la agrega el JS cuando el registro se completa bien */
+.form-feedback--success {
+  color: #15803d;
+  background-color: #f0fdf4; /* fondo verde muy suave, mismo criterio que el error */
+  border: 1px solid #bbf7d0;
   border-radius: var(--radius);
   padding: var(--spacing-sm);
 }

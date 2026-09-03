@@ -40,10 +40,12 @@
     </section>
 
     <section id="billetera" class="cards">
-        <article class="card">
-            <h2>Saldo disponible</h2>
-            <p>Consultá tu saldo en tiempo real.</p>
-        </article>
+        <button onclick="window.location.href='deposit.html';">
+            <article class="card">
+                <h2>Saldo disponible</h2>
+                <p>Consultá tu saldo en tiempo real.</p>
+            </article>
+        </button>
         <article class="card">
             <h2>Transferencias</h2>
             <p>Enviá y recibí dinero fácilmente.</p>
@@ -52,6 +54,14 @@
             <h2>Historial</h2>
             <p>Revisá todos tus movimientos.</p>
         </article>
+    </section>
+
+    <section id="dashboard" class="auth-section auth-section--hidden">
+        <h2 class="dashboard--title">Mi saldo</h2>
+
+        <!--descripcion-->
+
+        <h2 class="dashboard--saldo" id="saldo-disponible">Cargando...</h2>
     </section>
 
     <!-- ============================================ -->
