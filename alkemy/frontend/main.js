@@ -44,6 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Refs del form de login: se declaran acá arriba (y no solo adentro del
+  // bloque "if (loginForm)") porque el flujo de registro exitoso también
+  // necesita precargar el email y mostrar el mensaje de éxito en login.
+  const loginEmailInput = document.getElementById('login-email');
+  const loginPasswordInput = document.getElementById('login-password');
+  const loginFeedback = document.getElementById('login-feedback');
+
   // ============================================================
   // Formulario de REGISTRO: líneas 48-259
   // Campos requeridos por el backend en /api/auth/register:
@@ -222,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // --- Petición POST al backend con los 13 campos requeridos ---
-      fetch(`${BaseUrl}/api/auth/register`, { 
+      fetch(`${BaseUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -246,7 +253,27 @@ document.addEventListener('DOMContentLoaded', () => {
         .then((response) => {
           if (response.ok) {
             console.log('Registro exitoso');
-            // Acá luego se puede redirigir al login o mostrar un mensaje de éxito
+
+            const emailRegistrado = emailInput.value.trim();
+            registerForm.reset(); // limpia todos los campos para la próxima vez
+
+            // Ocultamos el registro y mostramos el login para que inicie sesión
+            registerSection.classList.add('auth-section--hidden');
+            loginSection.classList.remove('auth-section--hidden');
+            loginSection.scrollIntoView({ behavior: 'smooth' });
+
+            // Precargamos el email para que no lo tenga que tipear de nuevo
+            if (loginEmailInput) {
+              loginEmailInput.value = emailRegistrado;
+            }
+
+            // Mensaje de éxito (verde, distinto del feedback de error)
+            if (loginFeedback) {
+              loginFeedback.textContent = 'Cuenta creada con éxito. Iniciá sesión para continuar.';
+              loginFeedback.classList.remove('form-feedback--error');
+              loginFeedback.classList.add('form-feedback--success');
+            }
+
             return;
           }
 
@@ -273,9 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form'); // captura el <form> de login
 
   if (loginForm) {
-    const loginEmailInput = document.getElementById('login-email'); // input de email
-    const loginPasswordInput = document.getElementById('login-password'); // input de contraseña
-    const loginFeedback = document.getElementById('login-feedback'); // div de error general (401/403)
+    // loginEmailInput, loginPasswordInput y loginFeedback ya están declarados
+    // más arriba en este mismo scope (ver comentario junto a nav-login-link)
 
     const loginEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // misma regex básica que en registro
 
@@ -302,6 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function limpiarFeedback() {
       loginFeedback.textContent = ''; // borra el texto
       loginFeedback.classList.remove('form-feedback--error'); // saca el estilo de error
+      loginFeedback.classList.remove('form-feedback--success'); // saca el estilo de éxito
     }
 
     // --- Evento submit + preventDefault ---
@@ -354,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
               // Extraemos el token JWT de la respuesta y lo guardamos en el navegador
               localStorage.setItem('token', data.token);
               console.log('Login exitoso, token guardado en localStorage');
-              // Acá luego se puede redirigir al usuario a su dashboard/billetera
+              // TODO: mostrar el dashboard/billetera (historia de usuario aparte)
             });
           }
 
