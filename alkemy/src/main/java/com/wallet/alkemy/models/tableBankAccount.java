@@ -43,4 +43,7 @@ public class tableBankAccount {
     @Column (name = "Currency")
     private String currency;
 
+    @Column (name = "Balance", nullable = false)
+    private double balance;
+
 }

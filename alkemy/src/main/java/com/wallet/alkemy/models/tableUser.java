@@ -101,7 +101,7 @@ public class tableUser implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    @Override  // Aca se asigna el Email como nombre de usuario
+    @Override  // The email is used as the username.
     public String getUsername() {
         return email;
     }

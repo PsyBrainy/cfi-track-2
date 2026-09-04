@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Estructura de respuesta uniforme para cualquier error de la API.
+ * Uniform response structure for API errors.
  */
 @Getter
 @Setter
@@ -21,6 +21,7 @@ public class ErrorResponseDto {
     private String message;
     private String path;
 
+    /** Creates an error response with the current timestamp. */
     public static ErrorResponseDto of(int status, String error, String message, String path) {
         return new ErrorResponseDto(Instant.now(), status, error, message, path);
     }

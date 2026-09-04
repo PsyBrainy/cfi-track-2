@@ -37,6 +37,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final DatabaseUserDetailsService databaseUserDetailsService;
 
+    /** Configures stateless JWT-based HTTP security. */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -44,7 +45,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/public/**", // estas son las paginas a las que NO se necesita autorizacion
+                                "/api/public/**", // Public pages do not require authorization.
                                 "/api/auth/register",
                                 "/api/auth/login"
                         ).permitAll()
@@ -57,11 +58,13 @@ public class SecurityConfig {
     }
 
 
+    /** Provides the password encoder used for stored credentials. */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /** Creates the DAO authentication provider backed by the database user service. */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(databaseUserDetailsService);
@@ -69,28 +72,30 @@ public class SecurityConfig {
         return provider;
     }
 
+    /** Exposes Spring Security's configured authentication manager. */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+    /** Configures allowed browser origins, methods, and headers. */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Permite explícitamente los dos formatos comunes de tu Live Server
+        // Explicitly allow the two common Live Server origins.
         configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500")); 
         
-        // Habilita todos los métodos HTTP que requiere tu aplicación REST (incluyendo OPTIONS)
+        // Enable every HTTP method required by the REST API, including OPTIONS.
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         
-        // Permite las cabeceras estándar necesarias para el envío de JSON y tokens
+        // Allow standard headers required for JSON and token requests.
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
         
-        // Habilita el envío de cookies o credenciales si fuesen necesarias más adelante
+        // Allow cookies or credentials if they are needed later.
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Aplica a todos los endpoints
+        source.registerCorsConfiguration("/**", configuration); // Apply to all endpoints.
         return source;
     }
 
