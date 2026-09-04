@@ -16,10 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wallet.alkemy.config.tableUserRole;
 import com.wallet.alkemy.dto.LoginRequest;
 import com.wallet.alkemy.dto.LoginResponseDto;
 import com.wallet.alkemy.dto.UserDto;
+import com.wallet.alkemy.enums.tableUserRole;
 import com.wallet.alkemy.models.tableUser;
 import com.wallet.alkemy.repository.UserRepository;
 

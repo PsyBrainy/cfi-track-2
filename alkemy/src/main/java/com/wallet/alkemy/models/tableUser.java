@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.wallet.alkemy.config.tableUserRole;
+import com.wallet.alkemy.enums.tableUserRole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,7 +41,7 @@ public class tableUser implements UserDetails {
     @Column (name = "Name")
     private String name;
 
-    @Column (name = "Last Name")
+    @Column (name = "Last_Name")
     private String lastName;
 
     @Column (name = "Email", nullable = false, unique = true)

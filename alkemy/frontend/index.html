@@ -10,9 +10,8 @@
 
 <header class="site-header">
     <div class="container header__inner">
-        <a href="#" class="logo">Alkywall</a>
+        <a href="index.html" class="logo">Alkywall</a>
 
-        <!-- Nav responsive con hamburguesa: líneas 15-28 -->
         <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
             <span></span>
             <span></span>
@@ -21,12 +20,13 @@
 
         <nav class="nav" id="nav-menu">
             <ul class="nav__list">
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#billetera">Mi billetera</a></li>
-                <li><a href="#movimientos">Movimientos</a></li>
-                <li><a href="#contacto">Contacto</a></li>
-                <!-- Link que abre la pantalla de login -->
-                <li><a href="#login" id="nav-login-link">Iniciar sesión</a></li>
+                <li><a href="index.html#inicio">Inicio</a></li>
+                <li class="nav-item--auth"><a href="index.html#billetera">Mi billetera</a></li>
+                <li class="nav-item--auth"><a href="index.html#movimientos">Movimientos</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
+                <li id="nav-login-item"><a href="login.html">Iniciar sesión</a></li>
+                <li id="nav-registro-item"><a href="registro.html">Registrarse</a></li>
+                <li id="nav-logout-item"><a href="#" id="nav-logout-link">Cerrar sesión</a></li>
             </ul>
         </nav>
     </div>
@@ -39,11 +39,13 @@
         <button class="btn btn--primary" id="start-button">Empezar ahora</button>
     </section>
 
-    <section id="billetera" class="cards">
-        <article class="card">
-            <h2>Saldo disponible</h2>
-            <p>Consultá tu saldo en tiempo real.</p>
-        </article>
+    <section id="billetera" class="cards section--auth">
+        <button onclick="window.location.href='deposit.html';">
+            <article class="card">
+                <h2>Saldo disponible</h2>
+                <p>Consultá tu saldo en tiempo real.</p>
+            </article>
+        </button>
         <article class="card">
             <h2>Transferencias</h2>
             <p>Enviá y recibí dinero fácilmente.</p>
@@ -54,166 +56,23 @@
         </article>
     </section>
 
-    <section id="dashboard" class="auth-section auth-section--hidden">
-        <h2 class="dashboard--title">Mi saldo</h2>
-
-        <!--descripcion-->
-
-        <h2 class="dashboard--saldo" id="saldo-disponible">Cargando...</h2>
+    <section id="movimientos" class="cards section--auth">
+        <article class="card">
+            <h2>Movimientos recientes</h2>
+            <p>Acá vas a ver tus movimientos una vez que inicies sesión.</p>
+        </article>
     </section>
 
-    <!-- ============================================ -->
-    <!-- Sección de registro: líneas 57-206 -->
-    <!-- Arranca oculta con "auth-section--hidden", la muestra "Empezar ahora" -->
-    <!-- Campos requeridos por el backend en /api/auth/register (13 campos) -->
-    <!-- ============================================ -->
-    <section id="registro" class="auth-section auth-section--hidden auth-section--wide">
-        <h2>Creá tu cuenta</h2>
-
-        <form id="register-form" class="auth-form" novalidate>
-            <div class="form-grid">
-
-                <!-- name -->
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
-                    <span class="error-message" id="nombre-error"></span>
-                </div>
-
-                <!-- lastName -->
-                <div class="form-group">
-                    <label for="apellido">Apellido</label>
-                    <input type="text" id="apellido" name="apellido" placeholder="Tu apellido">
-                    <span class="error-message" id="apellido-error"></span>
-                </div>
-
-                <!-- email -->
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="text" id="email" name="email" placeholder="tuemail@ejemplo.com">
-                    <span class="error-message" id="email-error"></span>
-                </div>
-
-                <!-- password -->
-                <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres">
-                    <span class="error-message" id="password-error"></span>
-                </div>
-
-                <!-- birthDate -->
-                <div class="form-group">
-                    <label for="fechaNacimiento">Fecha de nacimiento</label>
-                    <input type="date" id="fechaNacimiento" name="fechaNacimiento">
-                    <span class="error-message" id="fechaNacimiento-error"></span>
-                </div>
-
-                <!-- gender: lista de 3 opciones -->
-                <div class="form-group">
-                    <label for="genero">Género</label>
-                    <select id="genero" name="genero">
-                        <option value="">Seleccioná una opción</option>
-                        <option value="femenino">Femenino</option>
-                        <option value="masculino">Masculino</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                    <span class="error-message" id="genero-error"></span>
-                </div>
-
-                <!-- dni -->
-                <div class="form-group">
-                    <label for="dni">DNI</label>
-                    <input type="text" id="dni" name="dni" placeholder="Sin puntos ni espacios">
-                    <span class="error-message" id="dni-error"></span>
-                </div>
-
-                <!-- phoneNumber -->
-                <div class="form-group">
-                    <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono" name="telefono" placeholder="Ej: 2920123456">
-                    <span class="error-message" id="telefono-error"></span>
-                </div>
-
-                <!-- employment: lista de opciones -->
-                <div class="form-group">
-                    <label for="ocupacion">Situación laboral</label>
-                    <select id="ocupacion" name="ocupacion">
-                        <option value="">Seleccioná una opción</option>
-                        <option value="empleado">Empleado/a en relación de dependencia</option>
-                        <option value="independiente">Independiente / Autónomo</option>
-                        <option value="desempleado">Desempleado/a</option>
-                        <option value="estudiante">Estudiante</option>
-                        <option value="jubilado">Jubilado/a</option>
-                    </select>
-                    <span class="error-message" id="ocupacion-error"></span>
-                </div>
-
-                <!-- address: ocupa el ancho completo de la grilla -->
-                <div class="form-group form-group--full">
-                    <label for="direccion">Dirección</label>
-                    <input type="text" id="direccion" name="direccion" placeholder="Calle y número">
-                    <span class="error-message" id="direccion-error"></span>
-                </div>
-
-                <!-- province: se completa dinámicamente en JS con la API de Georef -->
-                <div class="form-group">
-                    <label for="provincia">Provincia</label>
-                    <select id="provincia" name="provincia" disabled>
-                        <option value="">Cargando provincias...</option>
-                    </select>
-                    <span class="error-message" id="provincia-error"></span>
-                </div>
-
-                <!-- city: se completa dinámicamente en JS según la provincia elegida (API de Georef) -->
-                <div class="form-group">
-                    <label for="ciudad">Ciudad</label>
-                    <select id="ciudad" name="ciudad" disabled>
-                        <option value="">Elegí primero una provincia</option>
-                    </select>
-                    <span class="error-message" id="ciudad-error"></span>
-                </div>
-
-                <!-- postalCode -->
-                <div class="form-group form-group--full">
-                    <label for="codigoPostal">Código postal</label>
-                    <input type="text" id="codigoPostal" name="codigoPostal" placeholder="Ej: 8500">
-                    <span class="error-message" id="codigoPostal-error"></span>
-                </div>
-
-            </div>
-
-            <!-- Mensaje general de error del servidor -->
-            <div class="form-feedback" id="register-feedback"></div>
-
-            <button type="submit" class="btn btn--primary">Registrarme</button>
-        </form>
+    <section id="acceder" class="hero section--guest">
+        <h2>Accedé a tu billetera</h2>
+        <p>Iniciá sesión o creá tu cuenta para consultar tu saldo y movimientos.</p>
+        <a class="btn btn--primary" href="login.html">Iniciar sesión</a>
+        <a class="btn btn--outline" href="registro.html">Registrarse</a>
     </section>
 
-    <!-- ============================================ -->
-    <!-- Sección de login: líneas 209-234 -->
-    <!-- Arranca oculta con "auth-section--hidden", la muestra el link "Iniciar sesión" del nav -->
-    <!-- ============================================ -->
-    <section id="login" class="auth-section auth-section--hidden">
-        <h2>Iniciar sesión</h2>
-
-        <form id="login-form" class="auth-form" novalidate>
-            <div class="form-group">
-                <label for="login-email">Email</label>
-                <input type="text" id="login-email" name="login-email" placeholder="tuemail@ejemplo.com">
-                <span class="error-message" id="login-email-error"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="login-password">Contraseña</label>
-                <input type="password" id="login-password" name="login-password" placeholder="Tu contraseña">
-                <span class="error-message" id="login-password-error"></span>
-            </div>
-
-            <!-- Mensaje general de error del servidor (401/403), distinto del error por campo -->
-            <div class="form-feedback" id="login-feedback"></div>
-
-            <button type="submit" class="btn btn--primary">Ingresar</button>
-        </form>
+    <section id="contacto" class="hero">
+        <h2>Contacto</h2>
+        <p>¿Dudas o consultas? Escribinos a soporte@alkywall.com</p>
     </section>
 </main>
 
@@ -223,6 +82,6 @@
     </div>
 </footer>
 
-<script src="main.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
