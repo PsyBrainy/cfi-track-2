@@ -10,7 +10,12 @@ import com.wallet.alkemy.models.tableUser;
 
 @Repository 
 public interface UserJpaRepository extends JpaRepository<tableUser, Long> {
+    /** Finds a user by email address. */
     Optional<tableUser> findByEmail(String email);
+
+    /** Finds a user by primary key. */
     Optional<tableUser> findById(Long id);
+
+    /** Returns all users. */
     List<tableUser> findAll();
 }

@@ -2,7 +2,12 @@ package com.wallet.alkemy.models;
 
 import java.math.BigInteger;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,9 +28,8 @@ public class tableBankAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", nullable = false)
-    private tableUser idUser;
+    @Column (name = "Id_User")
+    private BigInteger idUser;
 
     @Column (name = "is_Active")
     private boolean isActive;
@@ -38,5 +42,8 @@ public class tableBankAccount {
 
     @Column (name = "Currency")
     private String currency;
+
+    @Column (name = "Balance", nullable = false)
+    private double balance;
 
 }

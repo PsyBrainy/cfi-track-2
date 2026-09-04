@@ -1,8 +1,8 @@
 package com.wallet.alkemy.controllers;
 
 import com.wallet.alkemy.dto.LoginRequest;
-import com.wallet.alkemy.dto.LoginResponseDto;
-import com.wallet.alkemy.dto.UserDto;
+import com.wallet.alkemy.dto.LoginResponseDTO;
+import com.wallet.alkemy.dto.UserDTO;
 import com.wallet.alkemy.service.AuthService;
 import jakarta.validation.Valid;
 import java.util.Map;
@@ -21,16 +21,16 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody UserDto userDto) {
+    /** Registers a user and creates the associated bank account. */
+    public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody UserDTO userDto) {
         return authService.register(userDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequest request) {
-        // BadCredentialsException (y cualquier otra excepción) es capturada
-        // centralmente por GlobalExceptionHandler, que la traduce a un
-        // ErrorResponseDto sanitizado con el status HTTP correspondiente.
-        LoginResponseDto response = authService.login(request);
+    /** Authenticates a user and returns a JWT response. */
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequest request) {
+        // Authentication failures are converted centrally by GlobalExceptionHandler.
+        LoginResponseDTO response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 }

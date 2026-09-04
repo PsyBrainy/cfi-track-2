@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.wallet.alkemy.enums.tableUserRole;
+import com.wallet.alkemy.config.tableUserRole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,7 +41,7 @@ public class tableUser implements UserDetails {
     @Column (name = "Name")
     private String name;
 
-    @Column (name = "Last_Name")
+    @Column (name = "Last Name")
     private String lastName;
 
     @Column (name = "Email", nullable = false, unique = true)
@@ -101,7 +101,7 @@ public class tableUser implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    @Override  // Aca se asigna el Email como nombre de usuario
+    @Override  // The email is used as the username.
     public String getUsername() {
         return email;
     }

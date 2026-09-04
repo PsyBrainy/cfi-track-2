@@ -1,4 +1,4 @@
-package com.wallet.alkemy.enums;
+package com.wallet.alkemy.config;
 
 public enum tableUserRole {
 
