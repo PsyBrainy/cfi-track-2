@@ -27,12 +27,12 @@ public class BankAccountService {
     /** Returns the latest balance and currency for the account owned by an email address. */
     public AccountDTO getBalanceByUser(String email) {
         tableUser user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
 
         BigInteger idUser = BigInteger.valueOf(user.getId());
 
         tableBankAccount account = bankAccountRepository.findByIdUser(idUser)
-            .orElseThrow(() -> new AccountNotFoundException("Account not found for user"));
+            .orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada para el usuario"));
 
         double currentBalance = transactionRepository
             .findFirstByAccountNumberOrderByIdDesc(BigInteger.valueOf(account.getId()))

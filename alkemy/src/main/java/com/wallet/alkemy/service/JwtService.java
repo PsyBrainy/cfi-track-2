@@ -71,7 +71,7 @@ public class JwtService {
 
         } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
             // Do not expose token details to callers; the exception is handled server-side.
-            throw new JwtValidationException("Invalid or malformed JWT token", e);
+            throw new JwtValidationException("Token JWT inválido o mal formado", e);
         }
     }
 

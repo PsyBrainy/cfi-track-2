@@ -59,7 +59,7 @@ public class tableTransaction {
     @PreUpdate
     private void validateAccountNumber() {
         if (accountNumber == null) {
-            throw new IllegalStateException("A transaction must have an associated account");
+            throw new IllegalStateException("Una transacción debe tener una cuenta asociada");
         }
     }
 

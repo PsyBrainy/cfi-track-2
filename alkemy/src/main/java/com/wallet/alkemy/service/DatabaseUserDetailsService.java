@@ -19,7 +19,7 @@ public class DatabaseUserDetailsService implements UserDetailsService {
     /** Loads the authenticated user's credentials and role from the database. */
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         tableUser user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         return User.builder()
                 .username(user.getEmail())

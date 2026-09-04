@@ -34,13 +34,13 @@ public class TransactionService {
     /** Adds a positive deposit to the authenticated user's active account. */
     public void makeDeposit(String email, Double amount) {
         if (email == null || email.isBlank() || amount == null || !Double.isFinite(amount) || amount <= 0) {
-            throw new IllegalArgumentException("The deposit amount must be greater than zero");
+            throw new IllegalArgumentException("El monto del depósito debe ser mayor que cero");
         }
 
         tableBankAccount account = userRepository.findByEmail(email)
                 .map(user -> accountRepository.findByIdUser(BigInteger.valueOf(user.getId()))
-                        .orElseThrow(() -> new AccountNotFoundException("Account not found for user")))
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                        .orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada para el usuario")))
+                    .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
         validateActiveAccount(account);
 
         Long accountId = account.getId();
@@ -54,7 +54,7 @@ public class TransactionService {
 
         int updatedAccounts = accountRepository.updateBalance(accountId, newBalance);
         if (updatedAccounts != 1) {
-            throw new AccountNotFoundException("Account not found");
+            throw new AccountNotFoundException("Cuenta no encontrada");
         }
 
         tableTransaction transaction = new tableTransaction();
@@ -72,8 +72,8 @@ public class TransactionService {
     public void makeTransfer(String sourceEmail, Long destinationAccountId, Double amount) {
         tableBankAccount sourceAccount = userRepository.findByEmail(sourceEmail)
                 .map(user -> accountRepository.findByIdUser(BigInteger.valueOf(user.getId()))
-                        .orElseThrow(() -> new AccountNotFoundException("Account not found for user")))
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                        .orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada para el usuario")))
+                    .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
         validateActiveAccount(sourceAccount);
 
         makeTransfer(sourceAccount.getId(), destinationAccountId, amount);
@@ -83,16 +83,16 @@ public class TransactionService {
     @Transactional
     public void makeTransfer(Long sourceAccountId, Long destinationAccountId, Double amount) {
         if (sourceAccountId == null || destinationAccountId == null || amount == null || !Double.isFinite(amount) || amount <= 0) {
-            throw new IllegalArgumentException("Transfer data is invalid");
+            throw new IllegalArgumentException("Los datos de la transferencia son inválidos");
         }
         if (sourceAccountId.equals(destinationAccountId)) {
-            throw new IllegalArgumentException("Source and destination accounts cannot be the same");
+            throw new IllegalArgumentException("La cuenta de origen y destino no pueden ser la misma");
         }
 
         tableBankAccount sourceAccount = accountRepository.findById(sourceAccountId)
-                .orElseThrow(() -> new AccountNotFoundException("Source account not found"));
+                .orElseThrow(() -> new AccountNotFoundException("Cuenta de origen no encontrada"));
         tableBankAccount destinationAccount = accountRepository.findById(destinationAccountId)
-                .orElseThrow(() -> new AccountNotFoundException("Destination account not found"));
+                .orElseThrow(() -> new AccountNotFoundException("Cuenta de destino no encontrada"));
         validateActiveAccount(sourceAccount);
         validateActiveAccount(destinationAccount);
 
@@ -101,13 +101,13 @@ public class TransactionService {
 
         double sourceBalance = getCurrentBalance(sourceAccountNumber);
         if (sourceBalance < amount) {
-            throw new InsufficientBalanceException("Insufficient balance in source account");
+            throw new InsufficientBalanceException("Saldo insuficiente en la cuenta de origen");
         }
 
         double newSourceBalance = sourceBalance - amount;
         int updatedSourceAccounts = accountRepository.updateBalance(sourceAccountId, newSourceBalance);
         if (updatedSourceAccounts != 1) {
-            throw new AccountNotFoundException("Source account not found");
+            throw new AccountNotFoundException("Cuenta de origen no encontrada");
         }
 
         tableTransaction expense = new tableTransaction();
@@ -123,7 +123,7 @@ public class TransactionService {
         double newDestinationBalance = destinationBalance + amount;
         int updatedDestinationAccounts = accountRepository.updateBalance(destinationAccountId, newDestinationBalance);
         if (updatedDestinationAccounts != 1) {
-            throw new AccountNotFoundException("Destination account not found");
+            throw new AccountNotFoundException("Cuenta de destino no encontrada");
         }
 
         tableTransaction income = new tableTransaction();
@@ -160,20 +160,20 @@ public class TransactionService {
     /** Rejects operations against a closed bank account. */
     private void validateActiveAccount(tableBankAccount account) {
         if (!account.isActive()) {
-            throw new InactiveAccountException("The bank account is not open");
+            throw new InactiveAccountException("La cuenta bancaria no está abierta");
         }
     }
 
     /** Resolves and validates the active account belonging to an email address. */
     private tableBankAccount getActiveAccount(String email) {
         if (email == null || email.isBlank()) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("Usuario no encontrado");
         }
 
         tableBankAccount account = userRepository.findByEmail(email)
                 .map(user -> accountRepository.findByIdUser(BigInteger.valueOf(user.getId()))
-                        .orElseThrow(() -> new AccountNotFoundException("Account not found for user")))
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                        .orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada para el usuario")))
+                    .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
         validateActiveAccount(account);
         return account;
     }

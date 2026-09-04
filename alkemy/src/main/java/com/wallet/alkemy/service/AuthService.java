@@ -41,7 +41,7 @@ public class AuthService {
 
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             response.put("status", "error");
-            response.put("message", "The email address is already registered.");
+            response.put("message", "El correo electrónico ya está registrado.");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
 
@@ -49,7 +49,7 @@ public class AuthService {
         try {
             birthDate = LocalDate.parse(userDto.getBirthDate());
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("The birth date format is invalid. Use YYYY-MM-DD.");
+            throw new IllegalArgumentException("El formato de la fecha de nacimiento es inválido. Use AAAA-MM-DD.");
         }
 
         tableUser user = new tableUser();
@@ -84,7 +84,7 @@ public class AuthService {
     /** Authenticates a user and returns a signed JWT. */
     public LoginResponseDTO login(LoginRequest request) {
         userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
+                .orElseThrow(() -> new BadCredentialsException("Email o contraseña inválidos"));
 
         Authentication authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken.unauthenticated(

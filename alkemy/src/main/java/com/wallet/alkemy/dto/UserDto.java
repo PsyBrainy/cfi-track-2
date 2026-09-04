@@ -11,55 +11,55 @@ import lombok.Data;
 @Data
 public class UserDTO {
 
-    @NotBlank(message = "Email is required.")
-    @Email(message = "The email format is invalid.")
-    @Size(max = 100, message = "Email cannot exceed 100 characters.")
+    @NotBlank(message = "El correo electrónico es obligatorio.")
+    @Email(message = "El formato del correo electrónico ingresado no es válido.")
+    @Size(max = 100, message = "El correo electrónico no puede superar los 100 caracteres.")
     private String email;
 
-    @NotBlank(message = "First name is required.")
-    @Size(max = 20, message = "First name cannot exceed 20 characters.")
+    @NotBlank(message = "El nombre es obligatorio.")
+    @Size(max = 20, message = "El nombre no puede superar los 20 caracteres.")
     private String name;
 
-    @NotBlank(message = "Last name is required.")
-    @Size(max = 30, message = "Last name cannot exceed 30 characters.")
+    @NotBlank(message = "El apellido es obligatorio.")
+    @Size(max = 30, message = "El apellido no puede superar los 30 caracteres.")
     private String lastName;
 
-    @NotNull(message = "Phone number is required.")
+    @NotNull(message = "El número de teléfono es obligatorio.")
     private BigInteger phoneNumber;
 
-    @NotBlank(message = "Birth date is required.")
-    @Size(max = 255, message ="Birth date cannot exceed 255 characters.")
+    @NotBlank(message = "El año de nacimiento es obligatorio.")
+    @Size(max = 255, message ="El año de nacimiento no puede superar los 255 caracteres.")
     private String birthDate;
 
-    @NotBlank(message = "Password is required.")
-    @Size(max = 255, message ="Password cannot exceed 255 characters.")
+    @NotBlank(message = "La contraseña es obligatoria.")
+    @Size(max = 255, message ="La contraseña no puede superar los 255 caracteres.")
     private String password;
 
-    @NotBlank(message = "Address is required.")
-    @Size(max = 50, message ="Address cannot exceed 50 characters.")
+    @NotBlank(message = "La dirección es obligatoria.")
+    @Size(max = 50, message ="La dirección no puede superar los 50 caracteres.")
     private String address;
 
-    @NotNull(message = "National ID is required.")
+    @NotNull(message = "El DNI es obligatorio.")
     private BigInteger dni;
 
-    @NotBlank(message = "City is required.")
-    @Size(max = 50, message ="City cannot exceed 50 characters.")
+    @NotBlank(message = "La ciudad es obligatoria.")
+    @Size(max = 50, message ="La ciudad no puede superar los 50 caracteres.")
     private String city;
 
-    @NotBlank(message = "Province is required.")
-    @Size(max = 50, message ="Province cannot exceed 50 characters.")
+    @NotBlank(message = "La provincia es obligatoria.")
+    @Size(max = 50, message ="La provincia no puede superar los 50 caracteres.")
     private String province;
 
-    @NotBlank(message = "Postal code is required.")
-    @Size(max = 15, message ="Postal code cannot exceed 15 characters.")
+    @NotBlank(message = "El código postal es obligatorio.")
+    @Size(max = 15, message ="El código postal no puede superar los 15 caracteres.")
     private String postalCode;
 
-    @NotBlank(message = "Gender is required.")
-    @Size(max = 30, message ="Gender cannot exceed 30 characters.")
+    @NotBlank(message = "El género es obligatorio.")
+    @Size(max = 30, message ="El género no puede superar los 30 caracteres.")
     private String gender;
 
-    @NotBlank(message = "Employment status is required.")
-    @Size(max = 30, message ="Employment cannot exceed 30 characters.")
+    @NotBlank(message = "La situación laboral es obligatoria.")
+    @Size(max = 30, message ="La situación laboral no puede superar los 30 caracteres.")
     private String employment;
 
 }

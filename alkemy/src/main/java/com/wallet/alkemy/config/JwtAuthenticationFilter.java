@@ -57,13 +57,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             username = jwtService.getUsername(token);
         } catch (JwtValidationException e) {
             // Convert malformed or invalid tokens into a controlled 401 response.
-            log.warn("Invalid JWT received: {}", e.getMessage());
-            writeUnauthorizedResponse(response, request, "Invalid or expired token");
+            log.warn("JWT inválido recibido: {}", e.getMessage());
+            writeUnauthorizedResponse(response, request, "Token inválido o expirado");
             return;
         }
 
         if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
-            log.error("Invalid token or user already authenticated");
+            log.error("Token inválido o el usuario ya está autenticado");
             filterChain.doFilter(request, response);
             return;
         }
@@ -73,8 +73,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Load the current user, role, and password from the database.
             userDetails = userDetailsService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
-            log.warn("The token user no longer exists: {}", username);
-            writeUnauthorizedResponse(response, request, "Invalid or expired token");
+            log.warn("El usuario del token ya no existe: {}", username);
+            writeUnauthorizedResponse(response, request, "Token inválido o expirado");
             return;
         }
 
