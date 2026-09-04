@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creá tu cuenta · Alkywall</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container header__inner">
+        <a href="index.html" class="logo">Alkywall</a>
+    </div>
+</header>
+
+<main class="site-main container">
+    <section id="registro" class="auth-section auth-section--wide">
+        <h2>Creá tu cuenta</h2>
+
+        <form id="register-form" class="auth-form" novalidate>
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
+                    <span class="error-message" id="nombre-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" placeholder="Tu apellido">
+                    <span class="error-message" id="apellido-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email" placeholder="tuemail@ejemplo.com">
+                    <span class="error-message" id="email-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres">
+                    <span class="error-message" id="password-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaNacimiento">Fecha de nacimiento</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+                    <span class="error-message" id="fechaNacimiento-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="genero">Género</label>
+                    <select id="genero" name="genero">
+                        <option value="">Seleccioná una opción</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <span class="error-message" id="genero-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="dni">DNI</label>
+                    <input type="text" id="dni" name="dni" placeholder="Sin puntos ni espacios">
+                    <span class="error-message" id="dni-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="Ej: 2920123456">
+                    <span class="error-message" id="telefono-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="ocupacion">Situación laboral</label>
+                    <select id="ocupacion" name="ocupacion">
+                        <option value="">Seleccioná una opción</option>
+                        <option value="empleado">Empleado/a en relación de dependencia</option>
+                        <option value="independiente">Independiente / Autónomo</option>
+                        <option value="desempleado">Desempleado/a</option>
+                        <option value="estudiante">Estudiante</option>
+                        <option value="jubilado">Jubilado/a</option>
+                    </select>
+                    <span class="error-message" id="ocupacion-error"></span>
+                </div>
+
+                <div class="form-group form-group--full">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" name="direccion" placeholder="Calle y número">
+                    <span class="error-message" id="direccion-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="provincia">Provincia</label>
+                    <select id="provincia" name="provincia" disabled>
+                        <option value="">Cargando provincias...</option>
+                    </select>
+                    <span class="error-message" id="provincia-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="ciudad">Ciudad</label>
+                    <select id="ciudad" name="ciudad" disabled>
+                        <option value="">Elegí primero una provincia</option>
+                    </select>
+                    <span class="error-message" id="ciudad-error"></span>
+                </div>
+
+                <div class="form-group form-group--full">
+                    <label for="codigoPostal">Código postal</label>
+                    <input type="text" id="codigoPostal" name="codigoPostal" placeholder="Ej: 8500">
+                    <span class="error-message" id="codigoPostal-error"></span>
+                </div>
+
+            </div>
+
+            <div class="form-feedback" id="register-feedback"></div>
+
+            <div class="form-group form-group--full">
+                <label class="checkbox">
+                    <input type="checkbox" id="aceptar-terminos" name="aceptar-terminos">
+                    <span>Acepto los <a href="#" id="terminos-link">términos y condiciones</a> de Alkywall.</span>
+                </label>
+                <span class="error-message" id="aceptar-terminos-error"></span>
+
+                <label class="checkbox">
+                    <input type="checkbox" id="aceptar-cuenta" name="aceptar-cuenta">
+                    <span>Solicito la creación de una cuenta bancaria Alkywall, con CBU / CVU propio para
+                    operar y administrar mi saldo.</span>
+                </label>
+                <span class="error-message" id="aceptar-cuenta-error"></span>
+            </div>
+
+            <button type="submit" class="btn btn--primary">Registrarme</button>
+        </form>
+
+        <p class="auth-switch">¿Ya tenés cuenta? <a href="login.html">Iniciá sesión</a></p>
+    </section>
+</main>
+
+<!-- Modal de términos y condiciones -->
+<div class="modal" id="terminos-modal" aria-hidden="true">
+    <div class="modal__overlay" data-modal-close></div>
+    <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="terminos-title">
+        <button class="modal__close" data-modal-close aria-label="Cerrar">&times;</button>
+        <h2 id="terminos-title">Términos y condiciones</h2>
+        <div class="modal__body">
+            <p>Al utilizar Alkywall aceptás los siguientes términos:</p>
+            <ul>
+                <li>Alkywall es una billetera virtual de uso personal e intransferible.</li>
+                <li>Los fondos depositados estarán sujetos a las condiciones vigentes de la cuenta bancaria.</li>
+                <li>Debés mantener tus credenciales de acceso en forma confidencial.</li>
+                <li>El servicio puede modificarse o suspenderse con el debido aviso.</li>
+                <li>Los datos personales se tratan conforme a la legislación de protección de datos vigente.</li>
+            </ul>
+            <p>Al marcar la casilla, declarás haber leído y aceptado estos términos y condiciones.</p>
+        </div>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2026 Alkywall. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<script type="module" src="js/registroEntry.js"></script>
+</body>
+</html>
