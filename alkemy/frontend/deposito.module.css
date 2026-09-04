@@ -192,6 +192,65 @@ a {
     font-size: 0.95rem;
 }
 
+/* Shared wallet surface */
+body {
+    background: radial-gradient(circle at 8% 12%, rgba(251, 146, 60, 0.15), transparent 28rem),
+        radial-gradient(circle at 92% 18%, rgba(20, 184, 166, 0.14), transparent 25rem),
+        #f4f7f6;
+}
+
+.site-header {
+    background: rgba(255, 255, 255, 0.88);
+    border-bottom-color: rgba(23, 32, 51, 0.09);
+    backdrop-filter: blur(14px);
+}
+
+.logo {
+    color: #172033;
+    font-size: 1.4rem;
+}
+
+.logo::after {
+    content: " / wallet";
+    color: #0f9f8c;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.nav__list {
+    gap: 0.35rem;
+    padding: 0.3rem;
+    border: 1px solid rgba(23, 32, 51, 0.08);
+    border-radius: 999px;
+    background: rgba(244, 247, 246, 0.8);
+}
+
+.nav__list a {
+    padding: 0.52rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+}
+
+.nav__list a:hover,
+.nav__list a:focus-visible {
+    color: #172033;
+    background: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .nav.nav--open {
+        display: block;
+        width: 100%;
+    }
+}
+
+.card {
+    border-radius: 14px;
+    box-shadow: 0 16px 34px rgba(23, 32, 51, 0.08);
+}
+
 /* ================================================== */
 /* Sección de registro/login (líneas 198-303)          */
 /* ================================================== */
@@ -408,4 +467,21 @@ input[type=number] {
     outline: none;
     color: var(--color-text);
 
+}
+
+.nav-action {
+    padding: 0.52rem 0.85rem;
+    border: 0;
+    border-radius: 999px;
+    color: #c2410c;
+    background: transparent;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.nav-action:hover,
+.nav-action:focus-visible {
+    background: #fff7ed;
 }

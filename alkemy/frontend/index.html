@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alkywall</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="wallet-theme.css">
+    <link rel="stylesheet" href="navbar.css">
 </head>
 <body>
 
 <header class="site-header">
     <div class="container header__inner">
-        <a href="#" class="logo">Alkywall</a>
+        <a href="index.html#inicio" class="logo">Alkywall</a>
 
         <!-- Nav responsive con hamburguesa: líneas 15-28 -->
         <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
@@ -22,11 +24,13 @@
         <nav class="nav" id="nav-menu">
             <ul class="nav__list">
                 <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#billetera">Mi billetera</a></li>
-                <li><a href="#movimientos">Movimientos</a></li>
+                <li><a href="#billetera" data-auth-required>Mi billetera</a></li>
+                <li><a href="transacciones.html" data-auth-required>Movimientos</a></li>
+                <li><a href="transfer.html" data-auth-required>Transferir</a></li>
                 <li><a href="#contacto">Contacto</a></li>
                 <!-- Link que abre la pantalla de login -->
-                <li><a href="#login" id="nav-login-link">Iniciar sesión</a></li>
+                <li><a href="#login" id="nav-login-link" data-login-link>Iniciar sesión</a></li>
+                <li><button type="button" class="nav-action" data-logout-link>Cerrar sesión</button></li>
             </ul>
         </nav>
     </div>
@@ -40,20 +44,30 @@
     </section>
 
     <section id="billetera" class="cards">
-        <button onclick="window.location.href='deposit.html';">
-            <article class="card">
-                <h2>Saldo disponible</h2>
-                <p>Consultá tu saldo en tiempo real.</p>
-            </article>
-        </button>
-        <article class="card">
+        <a class="card card-link card-balance" href="deposit.html">
+            <span class="card-kicker">Tu cuenta</span>
+            <h2>Saldo disponible</h2>
+            <p>Consultá tu saldo en tiempo real.</p>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="card card-link card-activity" href="transfer.html">
+            <span class="card-kicker">En movimiento</span>
             <h2>Transferencias</h2>
             <p>Enviá y recibí dinero fácilmente.</p>
-        </article>
-        <article class="card">
+            <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="card card-link card-transfer" href="transfer.html">
+            <span class="card-kicker">Atajo</span>
+            <h2>Transferir dinero</h2>
+            <p>Enviá fondos a otro usuario por email.</p>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="card card-link card-history" href="transacciones.html">
+            <span class="card-kicker">Actividad</span>
             <h2>Historial</h2>
             <p>Revisá todos tus movimientos.</p>
-        </article>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
     </section>
 
     <section id="dashboard" class="auth-section auth-section--hidden">
@@ -221,10 +235,11 @@
 
 <footer class="site-footer">
     <div class="container">
-        <p>&copy; 2026 Alkywall. Todos los derechos reservados.</p>
+        <p id="contacto">&copy; 2026 Alkywall. Todos los derechos reservados.</p>
     </div>
 </footer>
 
+<script src="navigation.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

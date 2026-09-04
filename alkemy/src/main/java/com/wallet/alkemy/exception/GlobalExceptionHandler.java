@@ -78,7 +78,7 @@ public class GlobalExceptionHandler {
     /** Handles invalid operation arguments. */
     public ResponseEntity<ErrorResponseDto> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
         log.warn("Solicitud inválida: {}", ex.getMessage());
-        return buildResponse(HttpStatus.BAD_REQUEST, "Solicitud inválida", request);
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
     /** Handles insufficient funds without exposing internal exception details. */
@@ -93,6 +93,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleInactiveAccount(InactiveAccountException ex, HttpServletRequest request) {
         log.warn("Cuenta bancaria inactiva: {}", ex.getMessage());
         return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleUserNotFound(UserNotFoundException ex, HttpServletRequest request) {
+        log.warn("Usuario no encontrado: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleAccountNotFound(AccountNotFoundException ex, HttpServletRequest request) {
+        log.warn("Cuenta no encontrada: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
     /** Returns a generic response for unexpected failures. */

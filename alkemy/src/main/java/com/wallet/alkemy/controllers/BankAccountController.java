@@ -53,7 +53,7 @@ public class BankAccountController {
     public ResponseEntity<Void> makeTransfer(
             @Valid @RequestBody TransferRequestDTO request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        transactionService.makeTransfer(authentication.getName(), request.getDestinationAccountId(), request.getAmount());
+        transactionService.makeTransfer(authentication.getName(), request.getDestinationEmail(), request.getAmount());
         return ResponseEntity.ok().build();
     }
 

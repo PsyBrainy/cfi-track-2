@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alkywall - Transferir dinero</title>
+    <link rel="stylesheet" href="transfer.module.css">
+    <link rel="stylesheet" href="wallet-theme.css">
+    <link rel="stylesheet" href="navbar.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container header__inner">
+        <a href="index.html#inicio" class="logo">Alkywall</a>
+        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="nav" aria-label="Navegación principal">
+            <ul class="nav__list">
+                <li><a href="index.html#inicio">Inicio</a></li>
+                <li><a href="deposit.html" data-auth-required>Mi billetera</a></li>
+                <li><a href="transacciones.html" data-auth-required>Movimientos</a></li>
+                <li><a href="transfer.html" aria-current="page">Transferir</a></li>
+                <li><a href="index.html#login" data-login-link>Iniciar sesión</a></li>
+                <li><button type="button" class="nav-action" data-logout-link>Cerrar sesión</button></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="container page-content">
+    <section class="transfer-layout">
+        <div class="intro-block">
+            <span class="eyebrow">Operación segura</span>
+            <h1>Transferí dinero</h1>
+            <p>Enviá fondos a otra cuenta usando el correo electrónico de la persona destinataria.</p>
+            <div class="balance-card">
+                <span>Saldo disponible</span>
+                <strong id="saldo">Cargando...</strong>
+            </div>
+        </div>
+
+        <form id="transfer-form" class="transfer-card">
+            <div class="card-heading">
+                <span class="card-icon">$</span>
+                <div>
+                    <h2>Nueva transferencia</h2>
+                    <p>Completá los datos para continuar.</p>
+                </div>
+            </div>
+
+            <label for="emailDestino">Correo del destinatario</label>
+            <input type="email" id="emailDestino" name="emailDestino"
+                   placeholder="destinatario@correo.com" autocomplete="email" required>
+
+            <label for="monto">Monto a transferir</label>
+            <div class="amount-field">
+                <span>$</span>
+                <input type="number" id="monto" name="monto"
+                       placeholder="0,00" min="0.01" step="0.01" required>
+            </div>
+
+            <button type="submit" class="submit-button">Confirmar transferencia</button>
+            <p class="form-note">La operación se procesa de forma atómica.</p>
+        </form>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2026 Alkywall. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="navigation.js"></script>
+<script src="transfer.js"></script>
+</body>
+</html>

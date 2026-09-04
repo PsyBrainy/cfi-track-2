@@ -3,27 +3,18 @@ const BaseUrl = 'http://localhost:8080'; // Url Base, en local, si se sube el pr
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Alkywall: app inicializada');
 
-  // Nav responsive con hamburguesa: líneas 7-23
-  const navToggle = document.querySelector('.nav-toggle');
-  const nav = document.querySelector('.nav');
-
-  if (navToggle && nav) {
-    navToggle.addEventListener('click', () => {
-      const isOpen = nav.classList.toggle('nav--open');
-      navToggle.setAttribute('aria-expanded', isOpen);
-    });
-
-    // Cerrar el menú al hacer click en un link
-    nav.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        nav.classList.remove('nav--open');
-        navToggle.setAttribute('aria-expanded', 'false');
-      });
-    });
-  }
-
   const startButton = document.getElementById('start-button'); // botón "Empezar ahora" del hero
   const registerSection = document.getElementById('registro'); // sección del formulario de registro
+  const loginSection = document.getElementById('login');
+  const hasSession = Boolean(localStorage.getItem('token'));
+
+  if (hasSession) {
+    startButton?.classList.add('auth-section--hidden');
+    registerSection?.classList.add('auth-section--hidden');
+    loginSection?.classList.add('auth-section--hidden');
+  } else if (window.location.hash === '#login') {
+    loginSection?.classList.remove('auth-section--hidden');
+  }
 
   if (startButton && registerSection) {
     startButton.addEventListener('click', () => {
@@ -34,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Link "Iniciar sesión" del nav: abre la pantalla de login de la misma forma
   const navLoginLink = document.getElementById('nav-login-link');
-  const loginSection = document.getElementById('login');
 
   if (navLoginLink && loginSection) {
     navLoginLink.addEventListener('click', (event) => {
@@ -304,8 +294,10 @@ document.addEventListener('DOMContentLoaded', () => {
              const saldoElement = document.getElementById('saldo-disponible');
           //formatear moneda
           function formatearMoneda(valor){
+          const saldo = Number(valor);
+          const saldoSeguro = Number.isFinite(saldo) ? saldo : 0;
           return new Intl.NumberFormat('es-AR', {style:
-          'currency',currency: 'ARS' }).format(valor)}
+          'currency',currency: 'ARS' }).format(saldoSeguro)}
 
     // loginEmailInput, loginPasswordInput y loginFeedback ya están declarados
     // más arriba en este mismo scope (ver comentario junto a nav-login-link)
@@ -387,12 +379,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json().then((data) => {
               // Extraemos el token JWT de la respuesta y lo guardamos en el navegador
               localStorage.setItem('token', data.token);
+              updateNavigation();
               console.log('Login exitoso, token guardado en localStorage');
 
-              // ocultar login y billetera, mostrar dashboard*
+              // Ocultar acceso y formularios publicos despues del login.
               loginSection.classList.add('auth-section--hidden');
               document.getElementById('registro').classList.add('auth-section--hidden');
-              document.getElementById('billetera').classList.add('auth-section--hidden');
               document.getElementById('start-button').style.display = 'none';
               document.getElementById('dashboard').classList.remove('auth-section--hidden');
 
@@ -402,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
               })
               .then(res => res.json())
               .then(datos => {
-                saldoElement.textContent = formatearMoneda(datos.balance);
+                saldoElement.textContent = formatearMoneda(datos.saldoDisponible);
               })
               .catch(()=> {
                 saldoElement.textContent = 'Error al cargar saldo';
