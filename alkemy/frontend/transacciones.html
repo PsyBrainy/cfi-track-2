@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Movimientos</title>
+    <link rel="stylesheet" href="historial.module.css">
+</head>
+
+<body>
+<header class="site-header">
+    <div class="container header__inner">
+        <a href="#" class="logo">Alkywall</a>
+
+
+        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav" id="nav-menu">
+            <ul class="nav__list">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html">Mi perfil</a></li>
+                <li><a href="deposit.html">Depositar</a></li>
+
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<body>
+
+
+<div class="historial-container">
+    <h2 class="historial-title" align="center">Historial de Movimientos</h2>
+
+    <div class="table-wrapper">
+        <table class="movimientos-table">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Balance</th>
+                <th>Saldo Final</th>
+            </tr>
+            </thead>
+
+            <tbody id="contenedor-movimientos">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2026 Alkywall. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+
+
+<script src="transaction.js"></script>
+</body>
+</html>
