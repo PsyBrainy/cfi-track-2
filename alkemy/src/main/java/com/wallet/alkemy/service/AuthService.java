@@ -83,6 +83,11 @@ public class AuthService {
 
     /** Authenticates a user and returns a signed JWT. */
     public LoginResponseDTO login(LoginRequest request) {
+        if (request == null || request.getEmail() == null || request.getEmail().isBlank()
+                || request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new IllegalArgumentException("El correo electrónico y la contraseña son obligatorios.");
+        }
+
         userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Email o contraseña inválidos"));
 

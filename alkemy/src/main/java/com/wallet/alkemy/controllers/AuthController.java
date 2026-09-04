@@ -28,7 +28,7 @@ public class AuthController {
 
     @PostMapping("/login")
     /** Authenticates a user and returns a JWT response. */
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequest request) {
         // Authentication failures are converted centrally by GlobalExceptionHandler.
         LoginResponseDTO response = authService.login(request);
         return ResponseEntity.ok(response);
