@@ -40,12 +40,15 @@
     </section>
 
     <section id="billetera" class="cards section--auth">
-        <button onclick="window.location.href='deposit.html';">
-            <article class="card">
-                <h2>Saldo disponible</h2>
-                <p>Consultá tu saldo en tiempo real.</p>
-            </article>
-        </button>
+
+        <!-- Mismo markup en las 3 tarjetas (<a>/<article> + .card) para
+     que hereden estilos identicos. Se conserva el onclick del
+     <button> original (window.location.href='deposit.html') y el
+     href real por si JavaScript está deshabilitado. -->
+        <a class="card" href="deposit.html" onclick="window.location.href='deposit.html';">
+            <h2>Saldo disponible</h2>
+            <p>Consultá tu saldo en tiempo real.</p>
+        </a>
         <article class="card">
             <h2>Transferencias</h2>
             <p>Enviá y recibí dinero fácilmente.</p>
