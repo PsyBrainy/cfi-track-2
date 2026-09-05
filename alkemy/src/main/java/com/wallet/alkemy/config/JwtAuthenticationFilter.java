@@ -9,6 +9,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wallet.alkemy.dto.ErrorResponseDto;
 import com.wallet.alkemy.exception.JwtValidationException;
@@ -33,7 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+        private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule());
 
 
 
@@ -54,24 +56,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             username = jwtService.getUsername(token);
         } catch (JwtValidationException e) {
-            // El token llegó corrupto/mal formado/con firma inválida: no dejamos que la excepción
-            // se propague al servlet container (eso generaba un 500 con stacktrace crudo).
-            // En su lugar respondemos 401 con un cuerpo JSON sanitizado y controlado.
+            // Convert malformed or invalid tokens into a controlled 401 response.
             log.warn("JWT inválido recibido: {}", e.getMessage());
             writeUnauthorizedResponse(response, request, "Token inválido o expirado");
             return;
         }
 
         if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
-            log.error("Invalid token or user already authenticated");
+            log.error("Token inválido o el usuario ya está autenticado");
             filterChain.doFilter(request, response);
             return;
         }
 
         UserDetails userDetails;
         try {
-            // Se carga el usuario real (con su rol y contraseña actual) desde la base de datos
-            // en vez de construir un UserDetails con datos ficticios/hardcodeados.
+            // Load the current user, role, and password from the database.
             userDetails = userDetailsService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
             log.warn("El usuario del token ya no existe: {}", username);
@@ -97,6 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /** Writes a sanitized unauthorized response for invalid authentication data. */
     private void writeUnauthorizedResponse(HttpServletResponse response, HttpServletRequest request, String message) throws IOException {
         ErrorResponseDto errorBody = ErrorResponseDto.of(
                 HttpServletResponse.SC_UNAUTHORIZED,

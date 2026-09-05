@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alkywall - Depósito</title>
+    <link rel="stylesheet" href="deposito.module.css">
+    <link rel="stylesheet" href="wallet-theme.css">
+    <link rel="stylesheet" href="navbar.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container header__inner">
+        <a href="index.html#inicio" class="logo">Alkywall</a>
+
+
+        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav" id="nav-menu">
+            <ul class="nav__list">
+                <li><a href="index.html#inicio">Inicio</a></li>
+                <li><a href="deposit.html" data-auth-required>Mi billetera</a></li>
+                <li><a href="transacciones.html" data-auth-required>Transacciones</a></li>
+                <li><a href="transfer.html" data-auth-required>Transferir</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
+                <li><a href="index.html#login" data-login-link>Iniciar sesión</a></li>
+                <li><button type="button" class="nav-action" data-logout-link>Cerrar sesión</button></li>
+
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+<main class="wallet-page container">
+    <section class="wallet-heading">
+        <span class="wallet-eyebrow">Tu billetera</span>
+        <h1>Mové tu dinero</h1>
+        <p>Depositá fondos de forma rápida y segura.</p>
+    </section>
+
+    <section class="deposit-layout">
+        <article class="balance-panel">
+            <span class="panel-label">Saldo disponible</span>
+            <strong id="saldo">Cargando...</strong>
+            <span class="panel-caption">Pesos argentinos</span>
+        </article>
+
+        <article class="deposit-panel">
+            <div class="panel-heading">
+                <span class="panel-index">01</span>
+                <div>
+                    <h2>Agregar saldo</h2>
+                    <p>Elegí cuánto querés ingresar.</p>
+                </div>
+            </div>
+
+            <label for="monto">Monto a depositar</label>
+            <div class="deposit-amount-field">
+                <span>$</span>
+        <input type="number"
+               id="monto"
+               name="amount"
+               placeholder="0,00"
+               min="1"
+               step="0.01"
+               inputmode="decimal">
+            </div>
+            <button id="btnCargar" class="btn btn--primary" onclick="depositar()">Cargar saldo</button>
+        </article>
+    </section>
+</main>
+
+
+
+
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2026 Alkywall. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="navigation.js"></script>
+<script type="module" src="js/depositEntry.js"></script>
+<script src="deposit.js"></script>
+</body>
+</html>

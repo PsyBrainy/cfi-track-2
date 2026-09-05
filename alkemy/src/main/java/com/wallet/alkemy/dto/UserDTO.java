@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UserDto {
+public class UserDTO {
 
     @NotBlank(message = "El correo electrónico es obligatorio.")
     @Email(message = "El formato del correo electrónico ingresado no es válido.")
@@ -58,8 +58,8 @@ public class UserDto {
     @Size(max = 30, message ="El género no puede superar los 30 caracteres.")
     private String gender;
 
-    @NotBlank(message = "El estado de empleo es obligatorio.")
-    @Size(max = 30, message ="El empleo no puede superar los 30 caracteres.")
+    @NotBlank(message = "La situación laboral es obligatoria.")
+    @Size(max = 30, message ="La situación laboral no puede superar los 30 caracteres.")
     private String employment;
 
 }
