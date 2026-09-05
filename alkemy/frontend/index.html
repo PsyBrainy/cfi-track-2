@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alkywall</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="wallet-theme.css">
+    <link rel="stylesheet" href="navbar.css">
 </head>
 <body>
 
 <header class="site-header">
     <div class="container header__inner">
-        <a href="index.html" class="logo">Alkywall</a>
+        <a href="index.html#inicio" class="logo">Alkywall</a>
 
         <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
             <span></span>
@@ -23,6 +25,7 @@
                 <li><a href="index.html#inicio">Inicio</a></li>
                 <li class="nav-item--auth"><a href="index.html#billetera">Mi billetera</a></li>
                 <li class="nav-item--auth"><a href="index.html#movimientos">Movimientos</a></li>
+                <li class="nav-item--auth"><a href="transfer.html">Transferir</a></li>
                 <li><a href="index.html#contacto">Contacto</a></li>
                 <li id="nav-login-item"><a href="login.html">Iniciar sesión</a></li>
                 <li id="nav-registro-item"><a href="registro.html">Registrarse</a></li>
@@ -39,24 +42,31 @@
         <button class="btn btn--primary" id="start-button">Empezar ahora</button>
     </section>
 
-    <section id="billetera" class="cards section--auth">
-
-        <!-- Mismo markup en las 3 tarjetas (<a>/<article> + .card) para
-     que hereden estilos identicos. Se conserva el onclick del
-     <button> original (window.location.href='deposit.html') y el
-     href real por si JavaScript está deshabilitado. -->
-        <a class="card" href="deposit.html" onclick="window.location.href='deposit.html';">
+    <section id="billetera" class="cards">
+        <a class="card card-link card-balance" href="deposit.html">
+            <span class="card-kicker">Tu cuenta</span>
             <h2>Saldo disponible</h2>
             <p>Consultá tu saldo en tiempo real.</p>
+            <span class="card-arrow" aria-hidden="true">↗</span>
         </a>
-        <article class="card">
+        <a class="card card-link card-activity" href="transfer.html">
+            <span class="card-kicker">En movimiento</span>
             <h2>Transferencias</h2>
             <p>Enviá y recibí dinero fácilmente.</p>
-        </article>
-        <article class="card">
+            <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="card card-link card-transfer" href="transfer.html">
+            <span class="card-kicker">Atajo</span>
+            <h2>Transferir dinero</h2>
+            <p>Enviá fondos a otro usuario por email.</p>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="card card-link card-history" href="transacciones.html">
+            <span class="card-kicker">Actividad</span>
             <h2>Historial</h2>
             <p>Revisá todos tus movimientos.</p>
-        </article>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
     </section>
 
     <section id="movimientos" class="cards section--auth">
@@ -81,7 +91,7 @@
 
 <footer class="site-footer">
     <div class="container">
-        <p>&copy; 2026 Alkywall. Todos los derechos reservados.</p>
+        <p id="contacto">&copy; 2026 Alkywall. Todos los derechos reservados.</p>
     </div>
 </footer>
 

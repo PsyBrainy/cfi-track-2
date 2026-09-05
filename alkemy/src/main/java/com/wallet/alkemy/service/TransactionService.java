@@ -67,16 +67,22 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-    /** Resolves the user's source account and delegates the transfer to the ID-based operation. */
+    /** Resolves both accounts from their emails before executing the transfer. */
     @Transactional
-    public void makeTransfer(String sourceEmail, Long destinationAccountId, Double amount) {
+    public void makeTransfer(String sourceEmail, String destinationEmail, Double amount) {
         tableBankAccount sourceAccount = userRepository.findByEmail(sourceEmail)
                 .map(user -> accountRepository.findByIdUser(BigInteger.valueOf(user.getId()))
                         .orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada para el usuario")))
                     .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
         validateActiveAccount(sourceAccount);
 
-        makeTransfer(sourceAccount.getId(), destinationAccountId, amount);
+        tableBankAccount destinationAccount = userRepository.findByEmail(destinationEmail)
+            .map(user -> accountRepository.findByIdUser(BigInteger.valueOf(user.getId()))
+                .orElseThrow(() -> new AccountNotFoundException("Cuenta de destino no encontrada para el usuario")))
+            .orElseThrow(() -> new UserNotFoundException("El usuario destinatario no existe"));
+        validateActiveAccount(destinationAccount);
+
+        makeTransfer(sourceAccount.getId(), destinationAccount.getId(), amount);
     }
 
     /** Transfers funds between two active accounts and records both movements. */
@@ -86,7 +92,7 @@ public class TransactionService {
             throw new IllegalArgumentException("Los datos de la transferencia son inválidos");
         }
         if (sourceAccountId.equals(destinationAccountId)) {
-            throw new IllegalArgumentException("La cuenta de origen y destino no pueden ser la misma");
+                throw new IllegalArgumentException("No se puede transferir dinero a la misma cuenta");
         }
 
         tableBankAccount sourceAccount = accountRepository.findById(sourceAccountId)
