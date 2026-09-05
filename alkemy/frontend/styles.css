@@ -201,6 +201,21 @@ a {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: var(--spacing-md);
+  /* Transición compartida: las tres tarjetas reaccionan igual al hover.
+     Antes la primera estaba envuelta en un <button> y el navegador la
+     dibujaba con estilos propios (borde/fondo/padding), distinta. */
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+/* Solo la tarjeta navegable (<a class="card">) muestra el cursor de clic;
+   el resto ya viene con el cursor default del <article>. */
+a.card {
+  display: block; /* evita que el link se comporte como texto inline */
 }
 
 .card h2 {
@@ -484,7 +499,7 @@ de la app(equivalencia practica a CSS Modules)
 .form-group select:focus {
   outline: none;
   border-color: var(--color-primary);
-}
+}gi
 
 .form-group select:disabled {
   background-color: var(--color-bg); /* gris para marcar visualmente que está deshabilitado */
