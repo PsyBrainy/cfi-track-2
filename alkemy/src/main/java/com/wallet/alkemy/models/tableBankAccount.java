@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class tableBankAccount {
 
     @Id
-    @Column (name = "Id")
+    @Column (name = "account_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
