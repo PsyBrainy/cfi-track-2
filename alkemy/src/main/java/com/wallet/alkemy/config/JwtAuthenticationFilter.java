@@ -1,16 +1,19 @@
 package com.wallet.alkemy.config;
+
 import java.io.IOException;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wallet.alkemy.dto.ErrorResponseDto;
 import com.wallet.alkemy.exception.JwtValidationException;
 import com.wallet.alkemy.service.JwtService;
@@ -21,27 +24,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-
-
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-        private final ObjectMapper objectMapper = new ObjectMapper()
+    private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule());
 
-
-
     @Override
-    protected void doFilterInternal(@NotNull HttpServletRequest request,@NotNull HttpServletResponse response,@NotNull FilterChain filterChain) throws ServletException, IOException {
-
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader("Authorization");
 
@@ -56,7 +51,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             username = jwtService.getUsername(token);
         } catch (JwtValidationException e) {
-            // Convert malformed or invalid tokens into a controlled 401 response.
             log.warn("JWT inválido recibido: {}", e.getMessage());
             writeUnauthorizedResponse(response, request, "Token inválido o expirado");
             return;
@@ -70,7 +64,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         UserDetails userDetails;
         try {
-            // Load the current user, role, and password from the database.
             userDetails = userDetailsService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
             log.warn("El usuario del token ya no existe: {}", username);
@@ -78,13 +71,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        UsernamePasswordAuthenticationToken authentication = new  UsernamePasswordAuthenticationToken(
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 null,
                 userDetails.getAuthorities()
         );
-
-
 
         authentication.setDetails(
                 new WebAuthenticationDetailsSource()
@@ -93,10 +84,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // =========================================================================
+        // RENOVACIÓN DE TOKEN: Si está autenticado, envía un token con 10 minutos nuevos
+        // =========================================================================
+        try {
+            String tokenFresco = jwtService.generateToken(userDetails);
+            response.setHeader("Refresh-Token", tokenFresco);
+        } catch (Exception e) {
+            log.error("Error al generar el Sliding Token: {}", e.getMessage());
+        }
+        // =========================================================================
+
         filterChain.doFilter(request, response);
     }
 
-    /** Writes a sanitized unauthorized response for invalid authentication data. */
     private void writeUnauthorizedResponse(HttpServletResponse response, HttpServletRequest request, String message) throws IOException {
         ErrorResponseDto errorBody = ErrorResponseDto.of(
                 HttpServletResponse.SC_UNAUTHORIZED,

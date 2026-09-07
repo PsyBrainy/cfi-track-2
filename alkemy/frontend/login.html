@@ -5,47 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión · Alkywall</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="js/guestCheck.js"></script>
 </head>
 <body>
 
-<header class="site-header">
-    <div class="container header__inner">
-        <a href="index.html" class="logo">Alkywall</a>
+<!-- Contenedor dinámico por si deseas inyectar el menú unificado aquí -->
+<div id="global-navbar"></div>
+
+<!-- login.html -->
+<main class="site-main container auth-container">
+    <!-- Tarjeta contenedora idéntica a la de registro para agrupar estilos -->
+    <div class="auth-card">
+        <section id="login" class="auth-section">
+            <div class="auth-header">
+                <h2>Iniciar sesión</h2>
+                <p>Ingresá tus credenciales para acceder a tu billetera.</p>
+            </div>
+
+            <form id="login-form" class="auth-form" novalidate>
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" placeholder="tuemail@ejemplo.com">
+                    <span class="error-message" id="login-email-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" name="password" placeholder="Tu contraseña">
+                    <span class="error-message" id="login-password-error"></span>
+                </div>
+
+                <div class="form-feedback" id="login-feedback"></div>
+
+                <div class="form-actions">
+                    <!-- Botón con la clase de tu tema de Alkywall -->
+                    <button type="submit" class="btn btn--primary btn--auth-submit">Ingresar</button>
+                    <p class="auth-switch">¿Aún no tenés cuenta? <a href="registro.html">Registrate</a></p>
+                </div>
+            </form>
+        </section>
     </div>
-</header>
-
-<main class="site-main container">
-    <section id="login" class="auth-section">
-        <h2>Iniciar sesión</h2>
-
-        <form id="login-form" class="auth-form" novalidate>
-            <div class="form-group">
-                <label for="login-email">Email</label>
-                <input type="text" id="login-email" name="login-email" placeholder="tuemail@ejemplo.com">
-                <span class="error-message" id="login-email-error"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="login-password">Contraseña</label>
-                <input type="password" id="login-password" name="login-password" placeholder="Tu contraseña">
-                <span class="error-message" id="login-password-error"></span>
-            </div>
-
-            <div class="form-feedback" id="login-feedback"></div>
-
-            <button type="submit" class="btn btn--primary">Ingresar</button>
-        </form>
-
-        <p class="auth-switch">¿Aún no tenés cuenta? <a href="registro.html">Registrate</a></p>
-    </section>
 </main>
+
 
 <footer class="site-footer">
     <div class="container">
         <p>&copy; 2026 Alkywall. Todos los derechos reservados.</p>
     </div>
 </footer>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="module" src="js/loginEntry.js"></script>
+<script type="module" src="js/navbar-loader.js"></script>
 </body>
 </html>

@@ -6,43 +6,23 @@
     <title>Alkywall</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="wallet-theme.css">
-    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="components/navbar.css">
+    <script src="js/guestCheck.js"></script>
+
 </head>
 <body>
 
-<header class="site-header">
-    <div class="container header__inner">
-        <a href="index.html#inicio" class="logo">Alkywall</a>
-
-        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <nav class="nav" id="nav-menu">
-            <ul class="nav__list">
-                <li><a href="index.html#inicio">Inicio</a></li>
-                <li class="nav-item--auth"><a href="index.html#billetera">Mi billetera</a></li>
-                <li class="nav-item--auth"><a href="index.html#movimientos">Movimientos</a></li>
-                <li class="nav-item--auth"><a href="transfer.html">Transferir</a></li>
-                <li><a href="index.html#contacto">Contacto</a></li>
-                <li id="nav-login-item"><a href="login.html">Iniciar sesión</a></li>
-                <li id="nav-registro-item"><a href="registro.html">Registrarse</a></li>
-                <li id="nav-logout-item"><a href="#" id="nav-logout-link">Cerrar sesión</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
+<div id="global-navbar"></div>
 
 <main class="site-main container">
     <section id="inicio" class="hero">
         <h1>Bienvenido a Alkywall</h1>
         <p>Tu billetera virtual simple, ordenada y segura.</p>
-        <button class="btn btn--primary" id="start-button">Empezar ahora</button>
+        <button class="btn btn--primary" id="start-button" onclick="window.location.href='registro.html'">Empezar ahora</button>
     </section>
 
-    <section id="billetera" class="cards">
+    <!-- CORREGIDO: data-auth-required como atributo real y oculto por defecto -->
+    <section id="billetera" class="cards" data-auth-required style="display: none;">
         <a class="card card-link card-balance" href="deposit.html">
             <span class="card-kicker">Tu cuenta</span>
             <h2>Saldo disponible</h2>
@@ -69,21 +49,13 @@
         </a>
     </section>
 
-    <section id="movimientos" class="cards section--auth">
+    <!-- CORREGIDO: Añadido data-auth-required y oculto por defecto -->
+    <section id="movimientos" class="cards section--auth" data-auth-required style="display: none;">
         <article class="card">
             <h2>Movimientos recientes</h2>
             <p>Acá vas a ver tus movimientos una vez que inicies sesión.</p>
         </article>
     </section>
-
-    <section id="acceder" class="hero section--guest">
-        <h2>Accedé a tu billetera</h2>
-        <p>Iniciá sesión o creá tu cuenta para consultar tu saldo y movimientos.</p>
-        <a class="btn btn--primary" href="login.html">Iniciar sesión</a>
-        <a class="btn btn--outline" href="registro.html">Registrarse</a>
-    </section>
-
-
 </main>
 
 <footer class="site-footer">
@@ -93,5 +65,6 @@
 </footer>
 
 <script type="module" src="main.js"></script>
+<script type="module" src="js/navbar-loader.js"></script>
 </body>
 </html>

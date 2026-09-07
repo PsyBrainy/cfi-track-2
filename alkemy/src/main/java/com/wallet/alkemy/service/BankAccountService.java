@@ -51,4 +51,15 @@ public class BankAccountService {
         newAccount.setBalance(0.0);
         return bankAccountRepository.save(newAccount);
     }
+    public tableBankAccount getAccountEntityByEmail(String email) {
+    // Reutilizamos exactamente tu misma lógica de las líneas 29 a 35
+    tableUser user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
+        
+    java.math.BigInteger idUser = java.math.BigInteger.valueOf(user.getId());
+
+    return bankAccountRepository.findByIdUser(idUser)
+        .orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada para el usuario"));
+}
+    
 }

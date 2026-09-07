@@ -1,11 +1,26 @@
 // login.js — lógica de la página de LOGIN.
-// Al ingresar guarda el token en localStorage y redirige al index,
-// que ya se muestra en modo "logueado" (oculta registro/login, muestra nav).
-
 import { BaseUrl } from './config.js';
 import { setToken } from './authState.js';
 
 export function initLogin() {
+  // =========================================================================
+  // NUEVO: GUARDIÁN AFK - Captura si el usuario viene expulsado por inactividad
+  // =========================================================================
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('motivo') === 'expirado') {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Sesión Expirada',
+      text: 'Tu sesión se ha cerrado automáticamente por seguridad debido a la inactividad. Por favor, ingresa nuevamente.',
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#2563eb'
+    }).then(() => {
+      // Limpia el parámetro de la URL (?motivo=expirado) para evitar duplicados
+      window.history.replaceState({}, document.title, window.location.pathname);
+    });
+  }
+  // =========================================================================
+
   const loginForm = document.getElementById('login-form');
   if (!loginForm) return;
 
@@ -84,8 +99,8 @@ export function initLogin() {
           return response.json().then((data) => {
             setToken(data.token);
             console.log('Login exitoso, token guardado en localStorage');
-            // Redirige al index, que se mostrará en modo logueado
-            window.location.href = 'index.html';
+            // MODIFICACIÓN: Redirige automáticamente a tu vista de billetera principal
+            window.location.href = 'dashboard.html';
           });
         }
         if (response.status === 401 || response.status === 403) {

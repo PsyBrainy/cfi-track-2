@@ -6,30 +6,11 @@
     <title>Alkywall - Transferir dinero</title>
     <link rel="stylesheet" href="transfer.module.css">
     <link rel="stylesheet" href="wallet-theme.css">
-    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="components/navbar.css">
+    <script type="module" src="js/tokenCheck.js"></script>
 </head>
-<body>
-<header class="site-header">
-    <div class="container header__inner">
-        <a href="index.html#inicio" class="logo">Alkywall</a>
-        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        <nav class="nav" aria-label="Navegación principal">
-            <ul class="nav__list">
-                <li><a href="index.html#inicio">Inicio</a></li>
-                <li><a href="deposit.html" data-auth-required>Mi billetera</a></li>
-                <li><a href="transacciones.html" data-auth-required>Movimientos</a></li>
-                <li><a href="transfer.html" aria-current="page">Transferir</a></li>
-                <li><a href="index.html#login" data-login-link>Iniciar sesión</a></li>
-                <li><button type="button" class="nav-action" data-logout-link>Cerrar sesión</button></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-
+<body style="display: none;">
+<div id="global-navbar"></div>
 <main class="container page-content">
     <section class="transfer-layout">
         <div class="intro-block">
@@ -75,7 +56,8 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="navigation.js"></script>
 <script src="transfer.js"></script>
+<script type="module" src="js/navbar-loader.js"></script>
+
 </body>
 </html>

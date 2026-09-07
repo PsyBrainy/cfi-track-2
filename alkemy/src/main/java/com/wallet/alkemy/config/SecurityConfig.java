@@ -94,6 +94,7 @@ public class SecurityConfig {
         // Allow cookies or credentials if they are needed later.
         configuration.setAllowCredentials(true);
 
+        configuration.setExposedHeaders(List.of("Refresh-Token")); // Permite que el cliente reciba el token de refresco
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // Apply to all endpoints.
         return source;

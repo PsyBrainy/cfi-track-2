@@ -1,26 +1,33 @@
-// main.js — punto de entrada de la app Alkywall
-const BaseUrl = 'http://localhost:8080'; // Url Base, en local, si se sube el proyecto a un servidor cambiar esta URL
+import { initNav } from './js/nav.js';
+import { isLogged } from './js/authState.js';
+
+const BaseUrl = 'http://localhost:8080';
+
 document.addEventListener('DOMContentLoaded', () => {
+
   console.log('Alkywall: app inicializada');
 
-  // Nav responsive con hamburguesa: líneas 7-23
-  const navToggle = document.querySelector('.nav-toggle');
-  const nav = document.querySelector('.nav');
+  // Inicializa navbar + control de autenticación
+  initNav();
 
-  if (navToggle && nav) {
-    navToggle.addEventListener('click', () => {
-      const isOpen = nav.classList.toggle('nav--open');
-      navToggle.setAttribute('aria-expanded', isOpen);
-    });
+  // ============================================================
+  // CONTROL DE CONTENIDO SEGÚN AUTENTICACIÓN
+  // ============================================================
 
-    // Cerrar el menú al hacer click en un link
-    nav.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        nav.classList.remove('nav--open');
-        navToggle.setAttribute('aria-expanded', 'false');
-      });
-    });
-  }
+  const logged = isLogged();
+
+  const authSections = document.querySelectorAll('.section--auth');
+  const guestSections = document.querySelectorAll('.section--guest');
+
+  // Contenido privado
+  authSections.forEach((section) => {
+    section.style.display = logged ? '' : 'none';
+  });
+
+  // Contenido para visitantes
+  guestSections.forEach((section) => {
+    section.style.display = logged ? 'none' : '';
+  });
 
   const startButton = document.getElementById('start-button'); // botón "Empezar ahora" del hero
   const registerSection = document.getElementById('registro'); // sección del formulario de registro

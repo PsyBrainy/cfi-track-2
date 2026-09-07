@@ -15,7 +15,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -24,7 +23,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
 
     private static final String SECRET_KEY = "4A8EB5FEEDCBB2923F600E47AF3D32EC123D017EA8C7CD218A0D36F6D2EB4B3E";
-    private static final long TOKEN_EXPIRATION = 1000 * 60 * 60 * 1; // Login tokens expire after one hour.
+    private static final long TOKEN_EXPIRATION = 1000 * 60 * 5; // Login tokens expire after 5 minutes.
 
 
     /** Generates a JWT containing the user's authorities. */
@@ -57,19 +56,19 @@ public class JwtService {
     }
 
     private Claims getAllClaims(String token) {
-
         try {
             return Jwts
                     .parserBuilder()
                     .setSigningKey(getSignInKey())
                     .build()
-                    .parseClaimsJws (token)
+                    .parseClaimsJws(token)
                     .getBody();
 
         } catch (ExpiredJwtException e) {
-            return e.getClaims();
+            // CAMBIO CRÍTICO: Rompe el flujo lanzando la excepción para que el filtro devuelva un 401
+            throw new JwtValidationException("El token JWT ha expirado", e);
 
-        } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+        } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e) {
             // Do not expose token details to callers; the exception is handled server-side.
             throw new JwtValidationException("Token JWT inválido o mal formado", e);
         }

@@ -16,4 +16,5 @@ public class AccountDTO {
 
     @com.fasterxml.jackson.annotation.JsonProperty("moneda")
     private String currency;
+    
 }

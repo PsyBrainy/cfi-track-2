@@ -1,0 +1,30 @@
+<!-- navbar.html -->
+<script>
+    // Si la URL actual termina exactamente en navbar.html, significa que entraron directo
+    if (window.location.pathname.endsWith('navbar.html')) {
+        window.location.href = '../index.html';
+    }
+</script>
+<header class="site-header">
+    <div class="container header__inner">
+        <!-- 1. Le agregamos id="nav-logo" al enlace principal -->
+        <a href="../index.html" id="nav-logo" class="logo">Alkywall</a>
+        
+        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav" id="nav-menu">
+            <ul class="nav__list">
+                <!-- 2. Le agregamos id="nav-inicio" al botón de Inicio -->
+                <li><a href="index.html" id="nav-inicio">Inicio</a></li>
+                <li><a href="dashboard.html" data-auth-required>Mi billetera</a></li>
+                <li><a href="index.html#contacto">Ayuda</a></li>
+                <li><a href="login.html" id="login-link">Iniciar sesión</a></li>
+                <li><button type="button" class="nav-action" data-logout-link>Cerrar sesión</button></li>
+            </ul>
+        </nav>
+    </div>
+</header>

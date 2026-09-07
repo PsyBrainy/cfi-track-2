@@ -1,12 +1,13 @@
 :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
+    /* Ajustados a los colores exactos de tu Dashboard corporativo */
+    --primary: #111c3a;       /* Tu azul oscuro principal */
+    --primary-dark: #0d635c;  /* Tu verde esmeralda oscuro para el hover */
     --ink: #172554;
     --muted: #64748b;
     --surface: #ffffff;
     --background: #f4f7fb;
     --border: #dbe4f0;
-    --success: #047857;
+    --success: #0f766e;       /* Tu verde institucional para los detalles destacados */
 }
 
 * {
@@ -119,7 +120,7 @@ body {
 
 .intro-block h1 {
     margin-bottom: 1rem;
-    color: var(--ink);
+    color: var(--primary); /* Título en tu azul corporativo grueso */
     font-size: clamp(2rem, 5vw, 3.6rem);
     line-height: 1.05;
 }
@@ -130,13 +131,14 @@ body {
     font-size: 1.05rem;
 }
 
+/* Modificada la preview para acoplarse armónicamente con tu verde de marca */
 .balance-card {
     display: inline-flex;
     flex-direction: column;
     gap: 0.35rem;
     margin-top: 2rem;
     padding: 1rem 1.25rem;
-    border-left: 4px solid var(--success);
+    border-left: 4px solid var(--success); /* Línea verde Alkywall */
     background: rgba(255, 255, 255, 0.75);
     box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
 }
@@ -147,7 +149,7 @@ body {
 }
 
 .balance-card strong {
-    color: var(--success);
+    color: var(--success); /* El importe ahora brilla en el verde del dashboard */
     font-size: 1.6rem;
 }
 
@@ -176,13 +178,13 @@ body {
     place-items: center;
     border-radius: 10px;
     color: #ffffff;
-    background: var(--primary);
+    background: var(--success); /* Icono del formulario unificado al verde */
     font-size: 1.4rem;
     font-weight: 800;
 }
 
 .card-heading h2 {
-    color: var(--ink);
+    color: var(--primary);
     font-size: 1.35rem;
 }
 
@@ -194,7 +196,7 @@ body {
 
 .transfer-card label {
     margin-top: 0.65rem;
-    color: var(--ink);
+    color: var(--primary);
     font-size: 0.88rem;
     font-weight: 700;
 }
@@ -204,14 +206,14 @@ body {
     padding: 0.85rem 0.95rem;
     border: 1px solid var(--border);
     border-radius: 7px;
-    color: var(--ink);
+    color: var(--primary);
     background: #fbfdff;
     font: inherit;
 }
 
 .transfer-card input:focus {
-    outline: 3px solid rgba(37, 99, 235, 0.15);
-    border-color: var(--primary);
+    outline: 3px solid rgba(15, 118, 110, 0.15);
+    border-color: var(--success);
 }
 
 .amount-field {
@@ -224,7 +226,7 @@ body {
 
 .amount-field span {
     padding-left: 0.95rem;
-    color: var(--primary);
+    color: var(--success);
     font-size: 1.2rem;
     font-weight: 700;
 }
@@ -234,20 +236,22 @@ body {
     background: transparent;
 }
 
+/* El botón ahora usa tu azul oscuro insignia y cambia a verde al hacer hover */
 .submit-button {
     margin-top: 1.25rem;
     padding: 0.9rem 1rem;
     border: none;
     border-radius: 7px;
     color: #ffffff;
-    background: var(--primary);
+    background: var(--primary); /* Azul oscuro de tu cabecera */
     font: inherit;
     font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 .submit-button:hover {
-    background: var(--primary-dark);
+    background: var(--success); /* Cambia suavemente a tu verde corporativo */
 }
 
 .submit-button:disabled {

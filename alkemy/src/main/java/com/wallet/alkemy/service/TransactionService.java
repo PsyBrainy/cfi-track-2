@@ -2,14 +2,15 @@ package com.wallet.alkemy.service;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wallet.alkemy.enums.MovementType;
-import com.wallet.alkemy.enums.TransactionType;
 import com.wallet.alkemy.dto.GroupedExpenseDTO;
 import com.wallet.alkemy.dto.TransactionHistoryDTO;
+import com.wallet.alkemy.enums.MovementType;
+import com.wallet.alkemy.enums.TransactionType;
 import com.wallet.alkemy.exception.AccountNotFoundException;
 import com.wallet.alkemy.exception.InactiveAccountException;
 import com.wallet.alkemy.exception.InsufficientBalanceException;
@@ -141,20 +142,175 @@ public class TransactionService {
         income.setAccountNumber(destinationAccountNumber);
         transactionRepository.save(income);
     }
+@Transactional(readOnly = true)
+public List<TransactionHistoryDTO> getHistoryByEmail(String email) {
 
-    /** Returns the authenticated user's transaction history. */
-    @Transactional(readOnly = true)
-    public List<TransactionHistoryDTO> getHistory(String email) {
-        tableBankAccount account = getActiveAccount(email);
-        return transactionRepository.getHistoryByAccount(BigInteger.valueOf(account.getId()));
-    }
+    // Buscar la cuenta activa correspondiente al usuario autenticado
+    tableBankAccount account = getActiveAccount(email);
 
-    /** Returns the authenticated user's outgoing transactions grouped by movement type. */
-    @Transactional(readOnly = true)
-    public List<GroupedExpenseDTO> getGroupedExpenses(String email) {
-        tableBankAccount account = getActiveAccount(email);
-        return transactionRepository.getGroupedExpensesByAccount(BigInteger.valueOf(account.getId()));
-    }
+    // En tu modelo el accountNumber de las transacciones
+    // corresponde al ID de la cuenta bancaria
+    BigInteger accountNumber = BigInteger.valueOf(account.getId());
+
+    // Obtener las filas desde el repositorio
+    List<Map<String, Object>> filas =
+            transactionRepository.getHistoryByAccount(accountNumber);
+
+    // Convertir cada fila al DTO que consume el frontend
+    return filas.stream().map(fila -> {
+
+        // ==========================================
+        // FECHA
+        // ==========================================
+
+        LocalDateTime fecha = null;
+
+        Object fechaObj = fila.get("DATE_TRANSACTION") != null
+                ? fila.get("DATE_TRANSACTION")
+                : fila.get("date_transaction");
+
+        if (fechaObj instanceof java.sql.Timestamp timestamp) {
+
+            fecha = timestamp.toLocalDateTime();
+
+        } else if (fechaObj instanceof LocalDateTime localDateTime) {
+
+            fecha = localDateTime;
+
+        } else if (fechaObj != null) {
+
+            try {
+                fecha = LocalDateTime.parse(fechaObj.toString());
+            } catch (Exception ignored) {
+                fecha = null;
+            }
+        }
+
+        // ==========================================
+        // ACCOUNT NUMBER
+        // ==========================================
+
+        Object accObj = fila.get("ACCOUNT_NUMBER") != null
+                ? fila.get("ACCOUNT_NUMBER")
+                : fila.get("account_number");
+
+        BigInteger accNum = null;
+
+        if (accObj instanceof Number number) {
+            accNum = BigInteger.valueOf(number.longValue());
+        }
+
+        // ==========================================
+        // AMOUNT
+        // ==========================================
+
+        Number amt = (Number) (
+                fila.get("AMOUNT") != null
+                        ? fila.get("AMOUNT")
+                        : fila.get("amount")
+        );
+
+        // ==========================================
+        // BALANCE
+        // ==========================================
+
+        Number bal = (Number) (
+                fila.get("BALANCE") != null
+                        ? fila.get("BALANCE")
+                        : fila.get("balance")
+        );
+
+        // ==========================================
+        // TYPE
+        // ==========================================
+
+        Object typeObj = fila.get("TYPE") != null
+                ? fila.get("TYPE")
+                : fila.get("type");
+
+        String type = typeObj != null
+                ? typeObj.toString()
+                : null;
+
+        // ==========================================
+        // MOVEMENT TYPE
+        // ==========================================
+
+        Object movementObj = fila.get("MOVEMENT_TYPE") != null
+                ? fila.get("MOVEMENT_TYPE")
+                : fila.get("movement_type");
+
+        String movementType = movementObj != null
+                ? movementObj.toString()
+                : null;
+
+        // ==========================================
+        // DTO
+        // ==========================================
+
+        return new TransactionHistoryDTO(
+                accNum,
+                amt != null ? amt.doubleValue() : 0.0,
+                bal != null ? bal.doubleValue() : 0.0,
+                fecha,
+                type,
+                movementType
+        );
+
+    }).toList();
+}
+@Transactional(readOnly = true)
+public List<TransactionHistoryDTO> getHistory(BigInteger accountNumber) {
+    // 1. Invocamos al historial nativo directo
+    List<Map<String, Object>> filas = transactionRepository.getHistoryByAccount(accountNumber);
+    
+    // 2. Mapeamos tolerando tanto claves en MAYÚSCULAS (comportamiento de SQL nativo) como en minúsculas
+    return filas.stream().map(fila -> {
+        java.time.LocalDateTime fecha = null;
+        
+        // Buscamos la columna de fecha en mayúsculas o minúsculas de forma segura
+        Object fechaObj = fila.get("DATE_TRANSACTION") != null ? fila.get("DATE_TRANSACTION") : fila.get("date_transaction");
+        if (fechaObj != null) {
+            if (fechaObj instanceof java.sql.Timestamp) {
+                fecha = ((java.sql.Timestamp) fechaObj).toLocalDateTime();
+            } else {
+                fecha = (java.time.LocalDateTime) fechaObj;
+            }
+        }
+        
+        // Extraemos los valores de las columnas SQL nativas en mayúsculas
+        BigInteger accNum = (BigInteger) (fila.get("ACCOUNT_NUMBER") != null ? fila.get("ACCOUNT_NUMBER") : fila.get("account_number"));
+        Number amt = (Number) (fila.get("AMOUNT") != null ? fila.get("AMOUNT") : fila.get("amount"));
+        Number bal = (Number) (fila.get("BALANCE") != null ? fila.get("BALANCE") : fila.get("balance"));
+        String t = (String) (fila.get("TYPE") != null ? fila.get("TYPE") : fila.get("type"));
+        String movType = (String) (fila.get("MOVEMENT_TYPE") != null ? fila.get("MOVEMENT_TYPE") : fila.get("movement_type"));
+
+        // Retornamos el DTO respetando el orden estricto de las variables de tu archivo
+        return new TransactionHistoryDTO(
+            accNum,
+            amt != null ? amt.doubleValue() : 0.0,
+            bal != null ? bal.doubleValue() : 0.0,
+            fecha,
+            t,
+            movType
+        );
+    }).toList();
+}
+@Transactional(readOnly = true)
+public List<GroupedExpenseDTO> getGroupedExpenses(String email) {
+    tableBankAccount account = getActiveAccount(email);
+    
+    // 1. Invocamos al repositorio nativo
+    List<Map<String, Object>> filas = transactionRepository.getGroupedExpensesByAccount(
+        BigInteger.valueOf(account.getId())
+    );
+    
+    // 2. Mapeamos usando exactamente tu GroupedExpenseDTO
+    return filas.stream().map(fila -> new GroupedExpenseDTO(
+        (String) fila.get("movement_type"),
+        ((Number) fila.get("total")).doubleValue()
+    )).toList();
+}
 
     /** Reads the latest recorded balance, defaulting to zero for a new account. */
     private double getCurrentBalance(BigInteger accountNumber) {
