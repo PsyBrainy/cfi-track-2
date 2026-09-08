@@ -40,7 +40,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authorization = request.getHeader("Authorization");
 
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
+        // MODIFICACIÓN 1: Tolerancia a ausencias de token y strings "null" provenientes del front
+        if (authorization == null || !authorization.startsWith("Bearer ") || 
+            authorization.equalsIgnoreCase("Bearer null") || authorization.trim().length() <= 7) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,12 +54,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             username = jwtService.getUsername(token);
         } catch (JwtValidationException e) {
             log.warn("JWT inválido recibido: {}", e.getMessage());
-            writeUnauthorizedResponse(response, request, "Token inválido o expirado");
+            
+            // MODIFICACIÓN 2: No cortamos el flujo abruptamente. Dejamos que pase la petición.
+            // Si la ruta es protegida, Spring Security devolverá el 403 de forma nativa.
+            // Si la ruta es pública (/check-session), llegará al controller para responder según tu lógica.
+            filterChain.doFilter(request, response);
             return;
         }
 
         if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
-            log.error("Token inválido o el usuario ya está autenticado");
             filterChain.doFilter(request, response);
             return;
         }
@@ -67,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             userDetails = userDetailsService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
             log.warn("El usuario del token ya no existe: {}", username);
-            writeUnauthorizedResponse(response, request, "Token inválido o expirado");
+            filterChain.doFilter(request, response);
             return;
         }
 

@@ -18,4 +18,6 @@ public interface UserJpaRepository extends JpaRepository<tableUser, Long> {
 
     /** Returns all users. */
     List<tableUser> findAll();
+    
+    List<tableUser> findByEmailContainingIgnoreCase(String email);
 }

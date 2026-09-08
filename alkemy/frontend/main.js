@@ -1,4 +1,3 @@
-import { initNav } from './js/nav.js';
 import { isLogged } from './js/authState.js';
 
 const BaseUrl = 'http://localhost:8080';
@@ -6,9 +5,6 @@ const BaseUrl = 'http://localhost:8080';
 document.addEventListener('DOMContentLoaded', () => {
 
   console.log('Alkywall: app inicializada');
-
-  // Inicializa navbar + control de autenticación
-  initNav();
 
   // ============================================================
   // CONTROL DE CONTENIDO SEGÚN AUTENTICACIÓN

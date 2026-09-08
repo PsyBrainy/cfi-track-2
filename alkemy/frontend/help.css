@@ -1,0 +1,116 @@
+/* help.css — Estilos modulares exclusivos del Centro de Ayuda Alkywall */
+
+/* Círculos contenedores de vectores geométricos */
+.help-panel-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    margin-bottom: 4px;
+    box-sizing: border-box;
+}
+
+.help-panel-icon-box--green { background: rgba(15, 118, 110, 0.08); color: #0f766e; }
+.help-panel-icon-box--blue  { background: rgba(29, 78, 216, 0.06); color: #1d4ed8; }
+.help-panel-icon-box--red   { background: rgba(239, 68, 68, 0.06); color: #ef4444; }
+
+/* Forzar sintonía tipográfica fina con tus elementos métricos */
+.help-panel-title {
+    color: #111c3a !important; 
+    font-weight: 700 !important; 
+    margin-top: 4px;
+}
+
+.help-panel-text {
+    line-height: 1.5 !important; 
+    flex-grow: 1;
+}
+
+.help-panel-link {
+    margin-top: 10px; 
+    display: inline-block;
+}
+
+.help-panel-link--red {
+    color: #ef4444 !important;
+}
+.help-panel-link--red:hover {
+    color: #b91c1c !important;
+}
+
+/* =========================================================================
+   MÓDULO ACORDEÓN INTERACTIVO (FAQ ROW STYLE)
+   ========================================================================= */
+
+.help-custom-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 20px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111c3a;
+    border-bottom: 1px solid #f3f4f6;
+    transition: color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.help-custom-trigger:hover {
+    color: #0f766e;
+}
+
+/* El último elemento de la lista no requiere borde inferior */
+.help-faq-row:last-child .help-custom-trigger {
+    border-bottom: 1px solid transparent;
+}
+
+/* Flechas de Control Dinámicas */
+.help-faq-arrow {
+    font-size: 0.7rem;
+    color: #9ca3af;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Bloque contenedor de contenido desplegable */
+.help-faq-answer-block {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.help-faq-answer-block p {
+    font-size: 0.92rem;
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0;
+    padding: 5px 0 20px 0;
+}
+
+/* =========================================================================
+   ESTADOS DE APERTURA INTERACTIVOS (JS CONTROLLED)
+   ========================================================================= */
+
+.help-faq-row.is-expanded .help-faq-arrow {
+    transform: rotate(180deg);
+    color: #0f766e;
+}
+
+.help-faq-row.is-expanded .help-custom-trigger {
+    color: #0f766e;
+    border-bottom: 1px solid transparent;
+}
+
+.help-faq-row.is-expanded .help-faq-answer-block {
+    max-height: 200px; /* Le da el tope máximo para que la transición fluya */
+}

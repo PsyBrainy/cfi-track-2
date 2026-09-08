@@ -1,7 +1,7 @@
-// js/navbar-loader.js
 import { BaseUrl } from './config.js';
 
-const URL_BALANCE = `${BaseUrl}/api/account/balance`;
+// ✅ CORRECCIÓN: Apuntamos al endpoint correcto y ligero de sesión
+const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
 const FIVE_MINUTES = 5 * 60 * 1000; // 5 minutos para el AFK en milisegundos
 let temporizadorInactividad;
 
@@ -63,9 +63,9 @@ async function verificarEstadoSesion() {
         return;
     }
 
-    // SI HAY TOKEN, verificamos si sigue siendo válido contra el Backend
+    // ✅ SI HAY TOKEN, verificamos vigencia contra el nuevo endpoint de sesión
     try {
-        const response = await fetch(URL_BALANCE, {
+        const response = await fetch(URL_CHECK_SESSION, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -77,7 +77,7 @@ async function verificarEstadoSesion() {
         const tokenExtendido = response.headers.get('Refresh-Token');
         if (tokenExtendido) {
             localStorage.setItem('token', tokenExtendido);
-            console.log('🔄 Sesión extendida por actividad.');
+            console.log('🔄 Sesión extendida por actividad en navbar.');
         }
 
         // CONTROL DE EXPIRACIÓN / NO AUTORIZADO

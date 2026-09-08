@@ -40,4 +40,7 @@ public class UserRepository {
     public void deleteById(Long id) {
         userJpaRepository.deleteById(id);
     }
+    public List<tableUser> findByEmailContainingIgnoreCase(String email) {
+        return userJpaRepository.findByEmailContainingIgnoreCase(email);
+    }
 }

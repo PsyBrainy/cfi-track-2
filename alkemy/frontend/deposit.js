@@ -31,7 +31,15 @@ async function loadBalance() {
             throw new Error(data.message || 'No se pudo consultar el saldo.');
         }
 
-        balanceElement.textContent = Number(data.saldoDisponible ?? data.availableBalance ?? 0).toFixed(2);
+        // REEMPLAZÁ la línea "balanceElement.textContent = ..." por esta estructura:
+        const montoNumerico = Number(data.saldoDisponible ?? data.availableBalance ?? 0);
+
+        // Formato oficial regional de pesos argentinos ($ 13.610,00)
+        balanceElement.textContent = new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency: 'ARS'
+        }).format(montoNumerico);
+
     } catch (error) {
         balanceElement.textContent = '0.00';
         showMessage('No se pudo cargar el saldo', error.message || 'Hubo un problema al consultar el saldo.', 'error');

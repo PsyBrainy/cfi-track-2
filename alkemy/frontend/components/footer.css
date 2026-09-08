@@ -1,0 +1,264 @@
+/* =========================================================================
+   ESTILOS GENERALES DEL FOOTER GLOBAL (ALKYWALL PREMIUM THEME)
+   ========================================================================= */
+
+.alky-global-footer {
+    background: rgba(255, 255, 255, 0.75);
+    border-top: 1px solid rgba(23, 32, 51, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 4rem 0 2rem 0;
+    color: #475569;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    margin-top: 60px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.alky-footer-container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+/* Grilla Organizadora de 3 Columnas */
+.alky-footer-grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr 1.2fr;
+    gap: 50px;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(23, 32, 51, 0.05);
+}
+
+@media (max-width: 868px) {
+    .alky-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+}
+
+/* =========================================================================
+   COLUMNA 1: LOGOTIPO, SLOGAN Y BADGE RESPONSIVO
+   ========================================================================= */
+
+.alky-footer-logo {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #111c3a;
+    display: block;
+    margin-bottom: 0.8rem;
+    letter-spacing: -0.5px;
+}
+
+.alky-footer-logo::after {
+    content: " / wallet";
+    color: #0f766e;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.alky-footer-tagline {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+    max-width: 340px;
+    margin-bottom: 1.5rem;
+}
+
+/* Indicador de sistemas en línea (SLA) */
+.alky-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(15, 118, 110, 0.06);
+    border: 1px solid rgba(15, 118, 110, 0.1);
+    padding: 5px 14px;
+    border-radius: 999px;
+}
+
+.alky-status-badge .status-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #0f766e;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 10px #0f766e;
+}
+
+.alky-status-badge .status-text {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #0f766e;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* =========================================================================
+   COLUMNA 2: NAVEGACIÓN Y SOPORTE (LEGALES)
+   ========================================================================= */
+
+.alky-footer-links h4,
+.alky-footer-market h4 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #111c3a;
+    margin-bottom: 1.4rem;
+    letter-spacing: 0.8px;
+}
+
+.alky-footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.alky-footer-links li {
+    margin-bottom: 0.7rem;
+}
+
+.alky-footer-links a {
+    font-size: 0.9rem;
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: inline-block;
+}
+
+.alky-footer-links a:hover {
+    color: #0f766e;
+    transform: translateX(3px);
+}
+
+/* =========================================================================
+   COLUMNA 3: CAJAS DE COTIZACIÓN (FINANCIAL DESIGN)
+   ========================================================================= */
+
+.alky-premium-ticker-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+/* Tarjeta Tipo Píldora */
+.market-card-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(15, 118, 110, 0.12);
+    border-radius: 16px;
+    padding: 12px 18px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 14px rgba(15, 118, 110, 0.02);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.market-card-row--blue {
+    border-color: rgba(29, 78, 216, 0.1);
+    box-shadow: 0 4px 14px rgba(29, 78, 216, 0.02);
+}
+
+/* Efectos flotantes Premium */
+.market-card-row:hover {
+    transform: translateY(-2px);
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(17, 28, 58, 0.05);
+}
+
+/* Agrupador de Título e Icono de tendencia */
+.market-card-badge-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.market-card-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    background: rgba(15, 118, 110, 0.08);
+    color: #0f766e;
+    padding: 5px 9px;
+    border-radius: 8px;
+    min-width: 52px;
+    text-align: center;
+}
+
+.market-card-badge--blue {
+    background: rgba(29, 78, 216, 0.06);
+    color: #1d4ed8;
+}
+
+/* Flechas de Tendencia */
+.market-trend-arrow {
+    font-size: 0.65rem;
+    color: #0f766e;
+    animation: pulseArrow 2s infinite ease-in-out;
+}
+
+.market-trend-arrow--blue {
+    color: #1d4ed8;
+}
+
+/* Distribución de precios internos */
+.market-card-rates {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.rate-sub {
+    font-size: 0.72rem;
+    color: #64748b;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+/* Tipografía de Valores Numéricos */
+.rate-num {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #111c3a;
+}
+
+.rate-num-accent {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f766e; /* Verde institucional */
+}
+
+.rate-num-blue {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1d4ed8; /* Azul financiero */
+}
+
+/* Animación sutil de pulso para la flecha de mercado */
+@keyframes pulseArrow {
+    0%, 100% { opacity: 0.6; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* =========================================================================
+   BARRA INFERIOR DE COPYRIGHT Y LEGALES
+   ========================================================================= */
+
+.alky-footer-bottom {
+    padding-top: 1.8rem;
+    text-align: center;
+}
+
+.alky-footer-bottom p {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin: 0;
+}
