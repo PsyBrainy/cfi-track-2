@@ -11,3 +11,4 @@
 application.yaml
 docker-compose.yaml
 servers.json
+target/

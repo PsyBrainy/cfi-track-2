@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Alkywall</title>
+    
+    <!-- 1. Tus estilos base del dashboard (Mantienen la estética general) -->
+    <link rel="stylesheet" href="dashboard.css">
+    
+    <!-- 2. Estilos específicos de administración (Encapsulados bajo .alky-admin-panel) -->
+    <link rel="stylesheet" href="admin-custom.css">
+    <script type="module" src="js/adminTokenCheck.js"></script>
+
+</head>
+<body style="display: none;">
+
+
+    <!-- Contenedor donde se inserta dinámicamente tu barra de navegación global -->
+    <div id="global-navbar"></div>
+
+    <!-- CONTENEDOR SEGURO: Aislado con .alky-admin-panel para no pisar estilos de tu navbar -->
+    <div class="alky-admin-panel dashboard-main">
+        
+        <!-- Encabezado Interno del Panel (No interfiere con el Navbar) -->
+        <header class="dashboard-welcome">
+            <div>
+                <span class="welcome-eyebrow">Panel de Control</span>
+                <h1>¡Hola, Administrador!</h1>
+                <p>Gestión de usuarios y estados de cuentas en tiempo real.</p>
+            </div>
+        </header>
+
+        <!-- Grilla de Métricas de Administración (Usuarios totales, activos y bajas lógicas) -->
+        <section class="financial-grid">
+            <div class="metric-card balance-card">
+                <div class="card-header">
+                    <h3>Usuarios Registrados</h3>
+                </div>
+                <div class="amount-display" id="totalUsersMetric">--</div>
+                <p class="card-caption">Total histórico de cuentas creadas</p>
+            </div>
+
+            <div class="metric-card">
+                <div class="card-header">
+                    <h3>Cuentas Activas</h3>
+                    <span class="trend-badge positive" id="activePercentage">--%</span>
+                </div>
+                <div class="amount-display" id="activeUsersMetric" style="color: #0f766e;">--</div>
+                <p class="card-caption">Usuarios con acceso habilitado</p>
+            </div>
+
+            <div class="metric-card">
+                <div class="card-header">
+                    <h3>Cuentas Desactivadas</h3>
+                    <span class="trend-badge negative" id="inactivePercentage">--%</span>
+                </div>
+                <div class="amount-display" id="inactiveUsersMetric" style="color: #ef4444;">--</div>
+                <p class="card-caption">Cuentas suspendidas (Baja lógica)</p>
+            </div>
+        </section>
+
+        <!-- Tabla de Gestión de Usuarios con Filtro Reactivo por Servidor -->
+        <section class="table-wrapper">
+            <div class="admin-table-header-flex">
+                <h2>Listado General de Usuarios</h2>
+                
+                <!-- Buscador encapsulado por Email o Nombre -->
+                <div class="admin-search-wrapper">
+                    <input type="text" id="emailFilter" placeholder="🔍 Buscar por email o nombre...">
+                </div>
+            </div>
+            
+            <div class="responsive-table">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Usuario / CVU</th>
+                            <th>Email</th>
+                            <th>Fecha Registro</th>
+                            <th>Estado</th>
+                            <th class="text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Este bloque es controlado e insertado dinámicamente por admin-dashboard.js -->
+                        <tr>
+                            <td colspan="5" class="text-center admin-empty-message">
+                                Cargando listado de usuarios...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- 3. Lógica JavaScript para conectar los endpoints y los filtros con el backend -->
+    <script src="admin-dashboard.js"></script>
+</body>
+</html>

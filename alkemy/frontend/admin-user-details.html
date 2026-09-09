@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario - Alkywall Admin</title>
+    
+    <!-- 1. Estilos base del dashboard (Mantienen la estética general) -->
+    <link rel="stylesheet" href="dashboard.css">
+    
+    <!-- 2. Estilos específicos de administración (Encapsulados bajo .alky-admin-panel) -->
+    <link rel="stylesheet" href="admin-custom.css">
+</head>
+<body>
+
+    <!-- Contenedor donde se inserta dinámicamente tu barra de navegación global -->
+    <div id="global-navbar"></div>
+
+    <!-- CONTENEDOR SEGURO: Aislado con .alky-admin-panel para no pisar estilos de tu navbar -->
+    <div class="alky-admin-panel dashboard-main">
+        
+        <!-- Encabezado de Navegación Interno -->
+        <header class="dashboard-welcome">
+            <div>
+                <a href="admin-dashboard.html" class="link-more" style="display: inline-flex; align-items: center; gap: 5px; margin-bottom: 12px;">
+                    ← Volver al panel general
+                </a>
+                <h1>Expediente de Usuario</h1>
+                <p>Modificando el perfil financiero de <strong id="header-user-name">Cargando...</strong></p>
+            </div>
+        </header>
+
+        <!-- Layout de Distribución en Dos Columnas (Tabla de datos y Resumen de Billetera) -->
+        <div class="details-layout">
+            
+            <!-- Bloque Izquierdo: Formulario de Modificación de Información -->
+            <section class="table-wrapper">
+                <div class="section-header">
+                    <h2>Información Personal y de Cuenta</h2>
+                </div>
+                
+                <form class="admin-form" id="editUserForm">
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="user-name">Nombre Completo</label>
+                            <input type="text" id="user-name" placeholder="Ej: Facundo Acosta" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-dni">Documento (DNI/NIE)</label>
+                            <input type="text" id="user-dni" placeholder="Ej: 42.345.678" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="user-email">Correo Electrónico</label>
+                            <input type="email" id="user-email" placeholder="nombre@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-phone">Teléfono de Contacto</label>
+                            <input type="tel" id="user-phone" placeholder="Ej: +54 9 11 5555-1234">
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <div class="section-header" style="margin-top: 20px; border-bottom: none; padding-bottom: 0;">
+                        <h2>Control de Estado (Eliminación Lógica)</h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user-status">Habilitación de Cuenta (Boolean: active)</label>
+                        <select id="user-status" class="admin-select">
+                            <option value="true">true - Cuenta Activa (Permite operar)</option>
+                            <option value="false">false - Cuenta Desactivada / Bloqueada (Baja Lógica)</option>
+                        </select>
+                        <p class="card-caption" style="margin-top: 5px;">Al pasar el valor a 'false', el usuario sufrirá una baja lógica perdiendo el acceso a Alkywall de inmediato.</p>
+                    </div>
+
+                    <!-- Botones de Acción del Formulario -->
+                    <div style="display: flex; gap: 15px; margin-top: 30px;">
+                        <button type="submit" class="btn-action btn-action--primary" style="border: none; cursor: pointer;">
+                            Guardar Cambios
+                        </button>
+                        <a href="admin-dashboard.html" class="btn-action" style="text-align: center; display: inline-block;">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Bloque Derecho: Resumen financiero específico de la Billetera (Solo Lectura) -->
+            <section class="categories-wrapper" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="section-header">
+                    <h2>Métricas de Billetera</h2>
+                </div>
+
+                <div class="metric-card balance-card" style="padding: 20px; border-radius: 16px;">
+                    <span style="font-size: 0.8rem; opacity: 0.8;">Saldo Disponible</span>
+                    <div class="amount-display amount-display--sm" id="wallet-balance">$ 0,00</div>
+                </div>
+
+                <div class="category-item" style="border-bottom: 1px solid #f3f4f6; padding-bottom: 12px;">
+                    <div class="category-info">
+                        <span style="color: #9ca3af;">Tipo de Cuenta</span>
+                        <strong style="color: #111c3a;" id="wallet-type">-</strong>
+                    </div>
+                </div>
+
+                <div class="category-item" style="border-bottom: 1px solid #f3f4f6; padding-bottom: 12px;">
+                    <div class="category-info">
+                        <span style="color: #9ca3af;">CVU</span>
+                        <strong style="color: #111c3a; font-size: 0.85rem;" id="wallet-cvu">-</strong>
+                    </div>
+                </div>
+
+                <div class="category-item">
+                    <div class="category-info">
+                        <span style="color: #9ca3af;">Última Actualización</span>
+                        <strong style="color: #374151;" id="wallet-updated">-</strong>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- 3. Lógica JavaScript para procesar la lectura inicial y el PUT/PATCH del formulario -->
+    <script src="admin-user-details.js"></script>
+</body>
+</html>

@@ -1,11 +1,26 @@
 // login.js — lógica de la página de LOGIN.
-// Al ingresar guarda el token en localStorage y redirige al index,
-// que ya se muestra en modo "logueado" (oculta registro/login, muestra nav).
-
 import { BaseUrl } from './config.js';
 import { setToken } from './authState.js';
 
 export function initLogin() {
+  // =========================================================================
+  // NUEVO: GUARDIÁN AFK - Captura si el usuario viene expulsado por inactividad
+  // =========================================================================
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('motivo') === 'expirado') {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Sesión Expirada',
+      text: 'Tu sesión se ha cerrado automáticamente por seguridad debido a la inactividad. Por favor, ingresa nuevamente.',
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#2563eb'
+    }).then(() => {
+      // Limpia el parámetro de la URL (?motivo=expirado) para evitar duplicados
+      window.history.replaceState({}, document.title, window.location.pathname);
+    });
+  }
+  // =========================================================================
+
   const loginForm = document.getElementById('login-form');
   if (!loginForm) return;
 
@@ -82,12 +97,52 @@ export function initLogin() {
       .then((response) => {
         if (response.ok) {
           return response.json().then((data) => {
+            // Limpieza absoluta de residuos de sesiones previas (como strings "null")
+            localStorage.clear();
+
+            // 1. Guardamos el token en el estado de la aplicación
             setToken(data.token);
             console.log('Login exitoso, token guardado en localStorage');
-            // Redirige al index, que se mostrará en modo logueado
-            window.location.href = 'index.html';
+
+            // Guardamos adicionalmente la clave que usa el panel administrativo de forma explícita
+            localStorage.setItem('admin_token', data.token);
+
+            // =========================================================================
+            // 🔄 REDIRECCIÓN INTELIGENTE BASADA EN ROLES (JWT) - CORREGIDA
+            // =========================================================================
+            try {
+              const partesToken = data.token.split('.');
+              if (partesToken.length === 3) {
+                const payloadRaw = partesToken[1];
+                const base64 = payloadRaw.replace(/-/g, '+').replace(/_/g, '/');
+                
+                const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                    return '%' + ('0' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                
+                const payloadDecoded = JSON.parse(jsonPayload);
+
+                // CORRECCIÓN: Buscamos tanto 'ADMIN' como 'ROLE_ADMIN' de forma tolerante
+                const authorities = payloadDecoded.authorities || [];
+                const esAdmin = authorities.includes('ADMIN') || authorities.includes('ROLE_ADMIN');
+
+                if (esAdmin) {
+                  console.log('🛡️ Administrador legítimo detectado. Direccionando al Panel de Control...');
+                  window.location.replace('admin-dashboard.html'); // Evita acumular historial corrupto
+                  return;
+                }
+              }
+            } catch (error) {
+              console.error('Error procesando el rol del token tras login:', error);
+            }
+
+            // Destino por defecto para usuarios comunes o fallas de lectura
+            console.log('👥 Cliente estándar detectado. Direccionando a la billetera...');
+            window.location.replace('dashboard.html');
+            // =========================================================================
           });
         }
+
         if (response.status === 401 || response.status === 403) {
           mostrarFeedback('Email o contraseña incorrectos.');
           return;

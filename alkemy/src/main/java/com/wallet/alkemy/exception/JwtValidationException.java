@@ -1,9 +1,8 @@
 package com.wallet.alkemy.exception;
 
 /**
- * Excepción de dominio que representa un token JWT inválido, expirado o mal formado.
- * Se lanza en lugar de RuntimeException para poder distinguirla y mapearla a una
- * respuesta HTTP controlada (401) sin filtrar detalles internos al cliente.
+ * Domain exception for invalid, expired, or malformed JWTs.
+ * It lets the application map token failures to a controlled 401 response.
  */
 public class JwtValidationException extends RuntimeException {
 

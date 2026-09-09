@@ -1,0 +1,170 @@
+/* admin-custom.css - Estilos protegidos bajo el espacio de nombres de administración */
+
+/* Contenedor principal que previene fugas de estilos */
+.alky-admin-panel {
+    box-sizing: border-box;
+}
+
+/* Encabezado flex y caja de filtrado por email */
+.alky-admin-panel .admin-table-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 15px;
+}
+
+.alky-admin-panel .admin-search-wrapper {
+    min-width: 280px;
+}
+
+/* Input específico de búsqueda con estilos de Alkywall */
+.alky-admin-panel .admin-search-wrapper input {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    background-color: #f9fafb;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.alky-admin-panel .admin-search-wrapper input:focus {
+    border-color: #0f766e;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+/* Modificadores de la tabla sin romper clases globales */
+.alky-admin-panel .admin-highlight-text {
+    color: #111c3a;
+    display: block;
+}
+
+.alky-admin-panel .admin-sub-cvu {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+.alky-admin-panel .admin-empty-message {
+    padding: 30px !important;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+/* Tags de baja lógica (Inactivo) */
+.alky-admin-panel .status-tag.status-tag--inactive {
+    background-color: #fce8e6;
+    color: #c5221f;
+}
+
+/* Botonera de acciones internas de la tabla */
+.alky-admin-panel .admin-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.alky-admin-panel .btn-admin-action {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.alky-admin-panel .btn-admin-action--edit {
+    background-color: #f3f4f6;
+    color: #111c3a;
+    border-color: #e5e7eb;
+}
+
+.alky-admin-panel .btn-admin-action--edit:hover {
+    background-color: #e5e7eb;
+}
+
+.alky-admin-panel .btn-admin-action--disable {
+    background-color: transparent;
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.alky-admin-panel .btn-admin-action--disable:hover {
+    background-color: #fce8e6;
+}
+
+.alky-admin-panel .btn-admin-action--enable {
+    background-color: transparent;
+    color: #0f766e;
+    border-color: rgba(15, 118, 110, 0.2);
+}
+
+.alky-admin-panel .btn-admin-action--enable:hover {
+    background-color: #e6f4ea;
+}
+
+/* Estilos de Formularios de Edición Protegidos */
+.alky-admin-panel .admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.alky-admin-panel .form-group-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 576px) {
+    .alky-admin-panel .form-group-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.alky-admin-panel .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.alky-admin-panel .form-group label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #111c3a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.alky-admin-panel .admin-form input,
+.alky-admin-panel .admin-select {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    font-size: 1rem;
+    color: #374151;
+    background-color: #f9fafb;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.alky-admin-panel .admin-form input:focus,
+.alky-admin-panel .admin-select:focus {
+    border-color: #0f766e;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.alky-admin-panel .form-divider {
+    height: 1px;
+    background-color: #f3f4f6;
+    margin: 15px 0;
+}

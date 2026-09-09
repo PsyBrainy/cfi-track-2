@@ -16,10 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wallet.alkemy.config.tableUserRole;
 import com.wallet.alkemy.dto.LoginRequest;
-import com.wallet.alkemy.dto.LoginResponseDto;
-import com.wallet.alkemy.dto.UserDto;
-import com.wallet.alkemy.enums.tableUserRole;
+import com.wallet.alkemy.dto.LoginResponseDTO;
+import com.wallet.alkemy.dto.UserDTO;
 import com.wallet.alkemy.models.tableUser;
 import com.wallet.alkemy.repository.UserRepository;
 
@@ -30,12 +30,13 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final BankAccountService bankAccountService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Map<String, Object>> register(UserDto userDto) {
+    public ResponseEntity<Map<String, Object>> register(UserDTO userDto) {
         Map<String, Object> response = new HashMap<>();
 
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
@@ -51,14 +52,12 @@ public class AuthService {
             throw new IllegalArgumentException("El formato de la fecha de nacimiento es inválido. Use AAAA-MM-DD.");
         }
 
-        //entidad JPA a partir del DTO validado (UserDto)
         tableUser user = new tableUser();
         user.setEmail(userDto.getEmail());
         user.setName(userDto.getName());
         user.setLastName(userDto.getLastName());
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setBirthDate(birthDate);
-        // La contraseña se cifra con Spring Security
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setAddress(userDto.getAddress());
         user.setDni(userDto.getDni());
@@ -74,6 +73,7 @@ public class AuthService {
         user.setRole(tableUserRole.USER);
 
         userRepository.save(user);
+        bankAccountService.createBankAccount(user);
 
         response.put("status", "success");
         response.put("data", Map.of("email", user.getEmail()));
@@ -81,13 +81,11 @@ public class AuthService {
         return ResponseEntity.ok(response);
     }
 
-    public LoginResponseDto login(LoginRequest request) {
-        // Verificamos primero que el email exista en la base de datos.
+    /** Authenticates a user and returns a signed JWT. */
+    public LoginResponseDTO login(LoginRequest request) {
         userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Email o contraseña inválidos"));
 
-        // El AuthenticationManager delega en DatabaseUserDetailsService + PasswordEncoder
-        // para comparar la contraseña ingresada contra lacontraseña con BCrypt almacenado.
         Authentication authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken.unauthenticated(
                         request.getEmail(),
@@ -98,7 +96,7 @@ public class AuthService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(userDetails);
 
-        LoginResponseDto response = new LoginResponseDto();
+        LoginResponseDTO response = new LoginResponseDTO();
         response.setToken(token);
 
         return response;

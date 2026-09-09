@@ -27,28 +27,29 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
-
-
-
-
 public class SecurityConfig {
-
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final DatabaseUserDetailsService databaseUserDetailsService;
 
+    /** Configures stateless JWT-based HTTP security. */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // Permite absolutamente todas las peticiones OPTIONS (Preflight) a cualquier ruta
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
+                        
                         .requestMatchers(
-                                "/api/public/**", // estas son las paginas a las que NO se necesita autorizacion
+                                "/api/public/**", 
                                 "/api/auth/register",
-                                "/api/auth/login"
+                                "/api/auth/login",
+                                "/api/auth/check-session",
+                                "/**/check-session" // CORRECCIÓN: Se le agregó la barra '/' inicial requerida
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/profile/**").authenticated()
+                        .requestMatchers("/api/admin/**").permitAll() // Tu dashboard libre temporalmente para pruebas locales
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -56,12 +57,13 @@ public class SecurityConfig {
                 .build();
     }
 
-
+    /** Provides the password encoder used for stored credentials. */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /** Creates the DAO authentication provider backed by the database user service. */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(databaseUserDetailsService);
@@ -69,30 +71,39 @@ public class SecurityConfig {
         return provider;
     }
 
+    /** Exposes Spring Security's configured authentication manager. */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+    /** Configures allowed browser origins, methods, and headers. */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Permite explícitamente los dos formatos comunes de tu Live Server
-        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:63342"));
+        // Explicitly allow the common Live Server origins.
+        configuration.setAllowedOrigins(List.of(
+            "http://127.0.0.1:5500", 
+            "http://localhost:5500",
+            "http://127.0.0.1:5501",
+            "http://localhost:5501"
+        )); 
         
-        // Habilita todos los métodos HTTP que requiere tu aplicación REST (incluyendo OPTIONS)
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        // CORRECCIÓN: Agregado "PATCH" requerido por la API para los cambios de estado lógico
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         
-        // Permite las cabeceras estándar necesarias para el envío de JSON y tokens
+        // Allow standard headers required for JSON and token requests.
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
         
-        // Habilita el envío de cookies o credenciales si fuesen necesarias más adelante
+        // Allow cookies or credentials if they are needed later.
         configuration.setAllowCredentials(true);
 
+        // Permite que el cliente reciba los tokens de forma expuesta en las respuestas HTTP
+        configuration.setExposedHeaders(List.of("Authorization", "Refresh-Token")); 
+        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Aplica a todos los endpoints
+        source.registerCorsConfiguration("/**", configuration); // Apply to all endpoints.
         return source;
     }
-
-
 }

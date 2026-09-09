@@ -1,0 +1,322 @@
+/* dashboard.css - Rediseño adaptado al tema corporativo de Alkywall */
+
+body {
+    /* Forzamos el uso de la tipografía limpia sin serifas de tu proyecto */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #ffffff;
+    color: #374151;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-main {
+    margin-top: 40px;
+    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    
+    /* ¡NUEVO! Agrega margen interno a los costados para despegarlo de los bordes */
+    padding-left: 24px;
+    padding-right: 24px;
+    box-sizing: border-box; /* Asegura que el padding no estire la pantalla */
+}
+
+/* Encabezado Principal */
+.dashboard-welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.welcome-eyebrow {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #0f766e; /* Tu verde institucional */
+    font-weight: 700;
+}
+
+.dashboard-welcome h1 {
+    font-size: 2.5rem;
+    font-weight: 800; /* Título grueso como el de "Mové tu dinero" */
+    color: #111c3a; /* Tu azul oscuro principal */
+    margin: 8px 0;
+    letter-spacing: -0.5px;
+}
+
+.dashboard-welcome p {
+    color: #6b7280;
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+/* Botones de acción rápida superiores */
+.quick-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 12px; /* Bordes redondeados idénticos a tus paneles */
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.2s ease-in-out;
+    background-color: #ffffff;
+    color: #111c3a;
+    border: 2px solid #e5e7eb;
+}
+
+.btn-action--primary {
+    background-color: #0f766e;
+    color: #ffffff;
+    border-color: #0f766e;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.1);
+}
+
+.btn-action--primary:hover {
+    background-color: #0d635c;
+    border-color: #0d635c;
+}
+
+/* Grilla de Paneles de Balance y Métricas */
+.financial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.metric-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 24px; /* Bordes bien redondeados e idénticos a tu contenedor azul */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s ease;
+}
+
+/* Copia exacta de tu panel azul oscuro de la billetera */
+.balance-card {
+    background-color: #111c3a; 
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 10px 30px rgba(17, 28, 58, 0.15);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #6b7280;
+}
+
+.balance-card .card-header h3 {
+    color: #ffffff;
+    opacity: 0.8;
+}
+
+.trend-badge {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-weight: 700;
+}
+
+.trend-badge.positive {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.trend-badge.negative {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.amount-display {
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #111c3a;
+}
+
+.balance-card .amount-display {
+    color: #ffffff;
+}
+
+.amount-display--sm {
+    font-size: 2.1rem;
+}
+
+.card-caption {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.balance-card .card-caption {
+    color: #ffffff;
+    opacity: 0.6;
+}
+
+/* Paneles Inferiores de Actividad y Distribución */
+.details-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 992px) {
+    .details-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.table-wrapper, .categories-wrapper {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 15px;
+}
+
+.section-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #111c3a;
+    margin: 0;
+}
+
+.link-more {
+    font-size: 0.9rem;
+    color: #0f766e;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.link-more:hover {
+    color: #0d635c;
+    text-decoration: underline;
+}
+
+/* Tablas estilizadas sin bordes toscos */
+.responsive-table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+th {
+    padding: 12px 8px;
+    color: #9ca3af;
+    font-weight: 700;
+    border-bottom: 2px solid #f3f4f6;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 18px 8px;
+    border-bottom: 1px solid #f8fafc;
+    color: #374151;
+    font-weight: 500;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+
+.status-tag {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-tag.completed { background-color: #e6f4ea; color: #137333; }
+.status-tag.pending { background-color: #fef7e0; color: #b06000; }
+
+.tx-amount { font-weight: 700; font-size: 1.05rem; }
+.tx-amount.income { color: #10b981; }
+.tx-amount.expense { color: #111c3a; }
+
+.table-loading {
+    color: #ef4444; /* Rojo suave para la advertencia de sincronización */
+    font-weight: 600;
+    padding: 30px 0;
+}
+
+/* Barras de distribución de categorías */
+.categories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.category-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.category-progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #f1f5f9;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.category-progress-fill {
+    height: 100%;
+    background-color: #0f766e; /* Barra verde institucional */
+    border-radius: 6px;
+    transition: width 0.8s ease-in-out;
+}

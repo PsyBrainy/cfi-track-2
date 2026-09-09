@@ -1,0 +1,598 @@
+/* ============================
+   Variables de marca: Alkywall
+   ============================ */
+:root {
+    /* Colores primarios */
+    --color-primary: #2563eb;
+    --color-primary-dark: #1d4ed8;
+    --color-secondary: #10b981;
+    --color-bg: #f8fafc;
+    --color-surface: #ffffff;
+    --color-text: #1e293b;
+    --color-text-muted: #64748b;
+    --color-border: #e2e8f0;
+
+    /* Tipografías */
+    --font-heading: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+    /* Espaciado y bordes */
+    --radius: 8px;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --max-width: 1100px;
+}
+
+/* ============================
+   Reset básico
+   ============================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.5;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--color-text);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+/* ============================
+   Header
+   ============================ */
+.site-header {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    position: relative;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.nav__list {
+    display: flex;
+    gap: var(--spacing-lg);
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.nav__list a {
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.nav__list a:hover {
+    color: var(--color-primary);
+}
+/* Simulación de CSS Modules mediante命名空间 para evitar colisiones */
+
+.form-group input,
+.form-group select {
+    padding: 0.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    background-color: var(--color-surface);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.form-group select:disabled {
+    background-color: var(--color-bg); /* gris para marcar visualmente que está deshabilitado */
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+/* ================================================== */
+/* Sección de registro/login (líneas 198-303)          */
+/* ================================================== */
+.auth-section {
+    max-width: 420px; /* mismo ancho que tenía .register */
+    margin: var(--spacing-lg) auto 0; /* centrado con espacio arriba */
+    background-color: var(--color-surface); /* fondo blanco, igual que .card */
+    border: 1px solid var(--color-border); /* borde sutil consistente con el resto */
+    border-radius: var(--radius); /* mismos bordes redondeados de la marca */
+    padding: var(--spacing-lg); /* aire interno */
+}
+
+/* Oculta toda la sección hasta que se clickee "Empezar ahora" */
+.auth-section--hidden {
+    display: none;
+}
+
+/* Variante ancha: la usa el registro, que tiene muchos más campos que el login */
+.auth-section--wide {
+    max-width: 680px;
+}
+
+.auth-section h2 {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-primary);
+}
+
+.auth-form {
+    display: flex; /* Flexbox: apila los campos verticalmente */
+    flex-direction: column; /* dirección vertical */
+    gap: var(--spacing-md); /* separación entre inputs */
+}
+
+/* Grid de 2 columnas para el formulario de registro (muchos campos) */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas iguales en desktop */
+    gap: var(--spacing-md);
+}
+
+/* Campos que necesitan ocupar el ancho completo (Dirección, Código postal) */
+.form-group--full {
+    grid-column: 1 / -1; /* de la primera a la última columna */
+}
+/* Nav responsive con hamburguesa: botón base (líneas 104-122) */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.nav-toggle span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: var(--color-text);
+}
+
+/* ============================
+   Main / Hero
+   ============================ */
+.site-main {
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+}
+
+.hero {
+    text-align: center;
+    padding: var(--spacing-lg) var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.hero h1 {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.hero p {
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-md);
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn--primary {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    transition: background-color 0.2s ease;
+}
+
+.btn--primary:hover {
+    background-color: var(--color-primary-dark);
+}
+
+/* ============================
+   Cards (Grid responsive)
+   ============================ */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--spacing-md);
+}
+
+.card h2 {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-primary);
+}
+
+.card p {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+.form-group input.input--error,
+.form-group select.input--error {
+    border-color: #dc2626;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 0.85rem;
+    min-height: 1em; /* evita que el layout salte cuando aparece/desaparece */
+}
+
+/* Mensaje general de error del servidor (401/403), va vacío hasta que el JS lo llena */
+.form-feedback {
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Variante de error: la agrega el JS cuando el login falla por credenciales inválidas */
+.form-feedback--error {
+    color: #dc2626;
+    background-color: #fef2f2; /* fondo rojo muy suave para resaltar el bloque */
+    border: 1px solid #fecaca;
+    border-radius: var(--radius);
+    padding: var(--spacing-sm);
+}
+
+.auth-form .btn {
+    margin-top: var(--spacing-sm); /* separa el botón submit de los inputs */
+}
+
+/* ============================
+   Footer
+   ============================ */
+.site-footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: var(--spacing-md) 0;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.historial-container {
+    max-width: 1000px;
+    margin: 2.5rem auto;
+    padding: 0 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.historial-title {
+    font-size: 1.75rem;
+    color: var(--color-primary);
+    margin-bottom: 1.75rem;
+    align-self: center;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    background: var(--color-surface);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+}
+
+.movimientos-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    text-align: left;
+}
+
+.movimientos-table th {
+    background-color: #eff6ff;
+    color: var(--color-primary);
+    padding: 14px 16px;
+    font-weight: 600;
+    border-bottom: 1px solid #dbeafe;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.movimientos-table td {
+    padding: 15px 16px;
+    border-bottom: 1px solid #edf2f7;
+    color: var(--color-text);
+    white-space: nowrap;
+}
+
+.movimientos-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.movimientos-table tbody tr:hover {
+    background-color: #f8fbff;
+}
+
+.movimiento-nombre {
+    font-weight: 600;
+}
+
+.tipo-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.tipo-ingreso {
+    color: #047857;
+    background: #d1fae5;
+}
+
+.tipo-egreso {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.importe {
+    font-weight: 700;
+    text-align: right;
+}
+
+.importe-ingreso {
+    color: #047857;
+}
+
+.importe-egreso {
+    color: #b91c1c;
+}
+
+/* Colores condicionales para transacciones */
+.estado-loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+}
+
+.estado-error {
+    text-align: center;
+    padding: 2rem;
+    color: #dc3545;
+    font-weight: 500;
+}
+
+body {
+    background: radial-gradient(circle at 8% 12%, rgba(251, 146, 60, 0.15), transparent 28rem),
+        radial-gradient(circle at 92% 18%, rgba(20, 184, 166, 0.14), transparent 25rem),
+        #f4f7f6;
+}
+
+.site-header {
+    background: rgba(255, 255, 255, 0.88);
+    border-bottom-color: rgba(23, 32, 51, 0.09);
+    backdrop-filter: blur(14px);
+}
+
+.logo {
+    color: #172033;
+    font-size: 1.4rem;
+}
+
+.logo::after {
+    content: " / wallet";
+    color: #0f9f8c;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.nav__list {
+    gap: 0.35rem;
+    padding: 0.3rem;
+    border: 1px solid rgba(23, 32, 51, 0.08);
+    border-radius: 999px;
+    background: rgba(244, 247, 246, 0.8);
+}
+
+.nav__list a {
+    padding: 0.52rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+}
+
+.nav__list a:hover,
+.nav__list a:focus-visible {
+    color: #172033;
+    background: #ffffff;
+}
+
+.nav-action {
+    padding: 0.52rem 0.85rem;
+    border: 0;
+    border-radius: 999px;
+    color: #c2410c;
+    background: transparent;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.nav-action:hover,
+.nav-action:focus-visible {
+    background: #fff7ed;
+}
+
+@media (max-width: 600px) {
+    .nav.nav--open {
+        display: block;
+        width: 100%;
+    }
+}
+
+
+/* ============================
+   Responsive: mobile
+   ============================ */
+@media (max-width: 600px) {
+    /* Nav responsive con hamburguesa: comportamiento mobile (líneas 211-238) */
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav {
+        display: none; /* oculto por defecto: no ocupa espacio ni tapa nada */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--color-surface);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .nav.nav--open {
+        display: block; /* solo aparece cuando el usuario lo abre */
+    }
+
+    .nav__list {
+        flex-direction: column;
+        gap: 0;
+    }
+
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+    .nav__list a {
+        display: block;
+        padding: var(--spacing-md);
+        border-top: 1px solid var(--color-border);
+    }
+
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+
+    /* El grid de 2 columnas del registro colapsa a 1 en mobile */
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+#monto{
+    align-self: center;
+    margin: 10px;
+    font-size: 50px;
+    border: 0px;
+    border-radius: 30px;
+    outline: none;
+    max-width: 300px;
+    color: var(--color-text);
+}
+
+
+#saldo{
+    align-self: center;
+    margin: 10px;
+    font-size: 50px;
+    border: 0px;
+    border-radius: 30px;
+    outline: none;
+    color: var(--color-text);
+
+}
+
+.monto-positivo {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.monto-negativo {
+    color: #dc3545;
+    font-weight: bold;
+}
