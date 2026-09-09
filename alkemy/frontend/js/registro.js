@@ -199,11 +199,42 @@ export function initRegistro() {
       .then((response) => {
         if (response.ok) {
           console.log('Registro exitoso');
+          const emailUsuario = emailInput.value.trim();
           registerForm.reset();
-          // Redirige a login con el email precargado para que inicie sesión
-          window.location.href = `login.html?email=${encodeURIComponent(emailInput.value.trim())}`;
+
+          // =========================================================================
+          // 🎯 NOTIFICACIÓN DE SWEETALERT INTERNA EN REGISTRO
+          // =========================================================================
+          Swal.fire({
+            icon: 'warning',
+            title: 'Verificá tu Correo Electrónico',
+            html: `
+              <p style="font-size: 15px; color: #6B7280; margin-bottom: 15px; line-height: 1.5;">
+                Tu registro en Alkywall se completó con éxito, pero tu cuenta se encuentra **inactiva**.
+              </p>
+              <div style="background-color: #F3F4F6; border-radius: 12px; padding: 15px; border: 1px solid #E5E7EB; text-align: left;">
+                <p style="margin: 0; font-size: 12px; font-weight: 700; color: #0F766E; text-transform: uppercase; letter-spacing: 0.5px;">
+                  Acción Obligatoria
+                </p>
+                <p style="margin: 5px 0 0 0; font-size: 14px; color: #111C3A; font-weight: 500; line-height: 1.4;">
+                  Debés ingresar a tu casilla de correo <strong style="color: #0F766E;">${emailUsuario}</strong> y hacer clic en el enlace de validación para activar la billetera.
+                </p>
+              </div>
+              <p style="font-size: 12px; color: #9CA3AF; margin-top: 15px; line-height: 1.4;">
+                Si no encontrás el mensaje en tu bandeja principal, recordá revisar la carpeta de Correo No Deseado (Spam).
+              </p>
+            `,
+            confirmButtonText: 'Entendido, ir al Login',
+            confirmButtonColor: '#0F766E', // Verde corporativo de Alkywall
+            allowOutsideClick: false // Obliga al usuario a interactuar con el botón
+          }).then(() => {
+            // 🔄 RECIÉN ACÁ REDIRIGE: Cuando el usuario presiona el botón del cartel
+            window.location.href = `login.html?email=${encodeURIComponent(emailUsuario)}`;
+          });
+
           return;
         }
+        
         return response
           .json()
           .then((data) => {

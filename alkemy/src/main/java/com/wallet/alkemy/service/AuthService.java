@@ -95,80 +95,75 @@ public class AuthService {
 
         return ResponseEntity.ok(response);
     }
+
     /**
      * Valida el token de activación y cambia el estado del usuario a activo.
      */
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Map<String, Object>> activateAccount(String token) {
-        Map<String, Object> response = new HashMap<>();
+    public boolean activateAccount(String token) {
         try {
             // 1. Extraer el email del token (Valida automáticamente expiración y firma)
             String email = jwtService.getUsername(token);
 
             // 2. Buscar al usuario
             tableUser user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado asociado a este token."));
+                    .orElseThrow(() -> new JwtValidationException("Usuario no encontrado asociado a este token."));
 
-            // 3. Validar si ya estaba activo
+            // 3. Si ya estaba activo, retornamos false para indicar que no requirió cambios
             if (user.isActive()) {
-                response.put("status", "info");
-                response.put("message", "Esta cuenta ya se encuentra activada.");
-                return ResponseEntity.ok(response);
+                return false;
             }
 
             // 4. Cambiar el estado a activo
             user.setActive(true);
             userRepository.save(user);
-
-            response.put("status", "success");
-            response.put("message", "¡Cuenta activada con éxito! Ya puedes iniciar sesión.");
-            return ResponseEntity.ok(response);
+            return true;
 
         } catch (JwtValidationException e) {
-            response.put("status", "error");
-            response.put("message", "El enlace de activación es inválido o ha expirado.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            // Propagamos el fallo de validación del token hacia el controlador
+            throw e;
         }
     }
+
     /**
      * Authenticates a user and returns a signed JWT.
      */
-public LoginResponseDTO login(LoginRequest request) {
-    // 1. Validamos la autenticación de Spring Security primero en un bloque controlado
-    try {
-        Authentication authentication = authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken.unauthenticated(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+    public LoginResponseDTO login(LoginRequest request) {
+        // 1. Validamos la autenticación de Spring Security primero en un bloque controlado
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    UsernamePasswordAuthenticationToken.unauthenticated(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
 
-        // 2. Si la contraseña es correcta, extraemos los datos del usuario de la base de datos
-        tableUser user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("El correo electrónico no se encuentra registrado"));
+            // 2. Si la contraseña es correcta, extraemos los datos del usuario de la base de datos
+            tableUser user = userRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("El correo electrónico no se encuentra registrado"));
 
-        // 3. Verificamos si la cuenta está activa
-        if (!user.isActive()) {
-            throw new DisabledException("La cuenta se encuentra inactiva. Por favor, confirma tu email, o contactate con nosotros.");
-        }
+            // 3. Verificamos si la cuenta está activa
+            if (!user.isActive()) {
+                throw new DisabledException("La cuenta se encuentra inactiva. Por favor, confirma tu email, o contactate con nosotros.");
+            }
 
-        // 4. Si todo es correcto, generamos el token de acceso exitoso
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(userDetails);
+            // 4. Si todo es correcto, generamos el token de acceso exitoso
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token = jwtService.generateToken(userDetails);
 
-        LoginResponseDTO response = new LoginResponseDTO();
-        response.setToken(token);
+            LoginResponseDTO response = new LoginResponseDTO();
+            response.setToken(token);
 
-        return response;
+            return response;
 
-    } catch (BadCredentialsException e) {
-        boolean existeEmail = userRepository.findByEmail(request.getEmail()).isPresent();
-        if (!existeEmail) {
-            throw new UsernameNotFoundException("El correo electrónico no se encuentra registrado");
-        } else {
-            throw new BadCredentialsException("La contraseña ingresada es incorrecta");
+        } catch (BadCredentialsException e) {
+            boolean existeEmail = userRepository.findByEmail(request.getEmail()).isPresent();
+            if (!existeEmail) {
+                throw new UsernameNotFoundException("El correo electrónico no se encuentra registrado");
+            } else {
+                throw new BadCredentialsException("La contraseña ingresada es incorrecta");
+            }
         }
     }
-}
 
 }

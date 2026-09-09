@@ -3,10 +3,11 @@ import { BaseUrl } from './config.js';
 import { setToken } from './authState.js';
 
 export function initLogin() {
+  const urlParams = new URLSearchParams(window.location.search);
+
   // =========================================================================
   // GUARDIÁN AFK - Captura si el usuario viene expulsado por inactividad
   // =========================================================================
-  const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('motivo') === 'expirado') {
     Swal.fire({
       icon: 'warning',
@@ -15,9 +16,49 @@ export function initLogin() {
       confirmButtonText: 'Aceptar',
       confirmButtonColor: '#2563eb'
     }).then(() => {
-      // Limpia el parámetro de la URL (?motivo=expirado) para evitar duplicados
       window.history.replaceState({}, document.title, window.location.pathname);
     });
+  }
+
+  // =========================================================================
+  // CAPTURA DE RESULTADO DE ACTIVACIÓN DESDE EL EMAIL (ALKYWALL)
+  // =========================================================================
+  if (urlParams.get('activado')) {
+    const estadoActivacion = urlParams.get('activado');
+
+    if (estadoActivacion === 'exito') {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Cuenta Activada!',
+        text: 'Tu correo electrónico ha sido verificado con éxito. Ya podés ingresar a tu billetera Alkywall y mover tu dinero.',
+        confirmButtonText: 'Comenzar',
+        confirmButtonColor: '#0F766E'
+      }).then(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      });
+
+    } else if (estadoActivacion === 'ya_activado' || estadoActivacion === 'ya-activado') {
+      Swal.fire({
+        icon: 'info',
+        title: 'Cuenta ya Verificada',
+        text: 'Esta cuenta ya había sido activada anteriormente. Podés iniciar sesión de forma normal.',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#111C3A'
+      }).then(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      });
+
+    } else if (estadoActivacion === 'error') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Enlace Expirado o Inválido',
+        text: 'El token de verificación ha caducado (vence a las 24 horas) o es incorrecto. Por favor, registrate de nuevo o contactá a soporte.',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#EF4444'
+      }).then(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      });
+    }
   }
   // =========================================================================
 
@@ -30,7 +71,6 @@ export function initLogin() {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // Si venimos de un registro exitoso, precargamos el email (?email=)
   const params = new URLSearchParams(window.location.search);
   const emailParam = params.get('email');
   if (emailParam && loginEmailInput) {
@@ -95,7 +135,6 @@ export function initLogin() {
       })
     })
     .then((response) => {
-      // 1. Si la respuesta es exitosa (Status 200-299)
       if (response.ok) {
         return response.json().then((data) => {
           localStorage.clear();
@@ -127,7 +166,6 @@ export function initLogin() {
         });
       }
 
-      // 2. Si el backend responde con un código de error (404, 401, 403, etc.)
       return response.json().then((errorData) => {
         if (errorData && errorData.message) {
           throw new Error(errorData.message);
@@ -137,7 +175,6 @@ export function initLogin() {
       });
     })
     .catch((error) => {
-      // 3. Captura final y muestra el mensaje dinámico en la etiqueta rosada
       if (error && error.message && error.message !== "Failed to fetch") {
         mostrarFeedback(error.message);
       } else {
@@ -145,4 +182,4 @@ export function initLogin() {
       }
     });
   });
-};
+}
