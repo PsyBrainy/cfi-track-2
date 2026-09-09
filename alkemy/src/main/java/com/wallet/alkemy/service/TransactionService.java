@@ -264,7 +264,6 @@ public List<TransactionHistoryDTO> getHistory(BigInteger accountNumber) {
     // 1. Invocamos al historial nativo directo
     List<Map<String, Object>> filas = transactionRepository.getHistoryByAccount(accountNumber);
     
-    // 2. Mapeamos tolerando tanto claves en MAYÚSCULAS (comportamiento de SQL nativo) como en minúsculas
     return filas.stream().map(fila -> {
         java.time.LocalDateTime fecha = null;
         

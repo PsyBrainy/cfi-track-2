@@ -480,17 +480,18 @@ a.card {
   border-radius: 4px;
 }
 
-/* ============================
-   Modal (Términos)
-   ============================ */
+/* ================================================== */
+/* MODAL (TÉRMINOS Y CONDICIONES) - DISEÑO ALKYWALL   */
+/* ================================================== */
 .modal {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 1000; /* Incrementado para superponerse al header sticky (z-index: 10) */
   display: none;
   align-items: center;
   justify-content: center;
   padding: var(--spacing-md);
+  box-sizing: border-box;
 }
 
 .modal--open {
@@ -500,13 +501,102 @@ a.card {
 .modal__overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(15, 23, 42, 0.6);
+  background-color: rgba(15, 23, 42, 0.45); /* Backdrop oscuro */
+  backdrop-filter: blur(5px); /* Suave desenfoque de fondo */
 }
 
 .modal__content {
   position: relative;
   background-color: var(--color-surface);
+  width: 100%;
+  max-width: 540px;
+  max-height: 85vh; /* Evita desbordamientos en pantallas chicas */
+  overflow-y: auto; /* Permite scroll si el texto supera la altura */
+  padding: 2.2rem;
+  border-radius: 16px; /* Sincronizado con .auth-card */
+  box-shadow: 0 20px 25px -5px rgba(23, 32, 51, 0.1), 0 10px 10px -5px rgba(23, 32, 51, 0.04);
+  border: 1px solid rgba(23, 32, 51, 0.08);
+  box-sizing: border-box;
+  animation: modalFadeIn 0.25s ease-out;
 }
-[data-auth-required] {
-    display: none !important;
+
+/* Tipografía e Interlineado interno del modal */
+.modal__content h2 {
+  font-size: 1.6rem;
+  color: #172033;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal__content p {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+}
+
+/* Lista de viñetas internas */
+.modal__content ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.modal__content li {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  line-height: 1.6;
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+/* Marcadores personalizados utilizando el color azul principal */
+.modal__content li::before {
+  content: "•";
+  color: var(--color-primary);
+  font-weight: bold;
+  font-size: 1.3rem;
+  position: absolute;
+  left: 4px;
+  top: -2px;
+}
+
+/* Botón de cerrar (cruz superior derecha) */
+.modal__content [data-modal-close] {
+  position: absolute;
+  top: 1.8rem;
+  right: 1.8rem;
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.modal__content [data-modal-close]:hover {
+  background-color: #e2e8f0;
+  color: #172033;
+}
+
+/* Efecto de entrada suave */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }

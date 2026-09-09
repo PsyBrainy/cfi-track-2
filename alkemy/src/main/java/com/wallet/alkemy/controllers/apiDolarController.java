@@ -13,16 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/api") // 🎯 ¡CLAVE!: Agregamos el prefijo /api que le faltaba a la clase
+@RequestMapping("/api")
 public class apiDolarController {
 
-    @GetMapping("/public/dolar-rates") // Ruta final unificada: /api/public/dolar-rates
+    @GetMapping("/public/dolar-rates")
     public ResponseEntity<String> getDolarRates() {
         try {
             RestTemplate restTemplate = new RestTemplate();
             String urlApiExterna = "https://dolarapi.com/v1/dolares";
             
-            // 🛡️ CONFIGURACIÓN DE CABECERAS: Evita el bloqueo simulando un navegador legítimo
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             headers.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36");

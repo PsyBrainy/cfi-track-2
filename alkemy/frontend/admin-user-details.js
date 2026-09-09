@@ -3,7 +3,7 @@
  * Gestión del expediente individual de usuario y actualización en el backend de Alkywall
  */
 
-const API_BASE_URL = 'http://localhost:8080/api/admin'; // Ajustá según la URL de tu backend
+const API_BASE_URL = 'http://localhost:8080/api/admin';
 let idUsuarioActual = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     idUsuarioActual = urlParams.get('id');
 
     if (!idUsuarioActual) {
-        alert('No se especificó ningún ID de usuario.');
         window.location.href = 'admin-dashboard.html';
         return;
     }
@@ -67,8 +66,7 @@ async function cargarDetallesUsuario() {
         }
 
     } catch (error) {
-        console.error('Error cargando el expediente del usuario:', error);
-        alert('Hubo un error al conectar con el servidor para leer el perfil.');
+
     }
 }
 
@@ -93,7 +91,7 @@ async function guardarCambiosUsuario(event) {
 
         // Petición PUT o PATCH al endpoint de actualización del usuario
         const response = await fetch(`${API_BASE_URL}/users/${idUsuarioActual}`, {
-            method: 'PUT', // Podés usar PATCH si tu API maneja actualizaciones parciales
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -104,21 +102,13 @@ async function guardarCambiosUsuario(event) {
         if (!response.ok) {
             throw new Error('Error al actualizar los datos en el servidor.');
         }
-
-        alert('El expediente del usuario ha sido actualizado correctamente.');
-        
         // Redirecciona de vuelta al dashboard general de administración
         window.location.href = 'admin-dashboard.html';
 
     } catch (error) {
-        console.error('Error actualizando el usuario:', error);
-        alert('No se pudieron guardar los cambios. Verificá la conexión con tu API.');
     }
 }
 
-/**
- * Utilidad: Convierte un número decimal al formato estético de Alkywall (ej: $ 14.610,00)
- */
 function formatearMoneda(monto) {
     if (monto === undefined || monto === null) return '$ 0,00';
     return new Intl.NumberFormat('es-AR', {
@@ -127,9 +117,6 @@ function formatearMoneda(monto) {
     }).format(monto);
 }
 
-/**
- * Utilidad: Formatea la fecha y hora de la última actualización (ej: "Hoy, 20:57 hs")
- */
 function formatearFechaHora(fechaString) {
     if (!fechaString) return '-';
     const fecha = new Date(fechaString);

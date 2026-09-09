@@ -2,12 +2,10 @@ package com.wallet.alkemy.config;
 
 import java.io.IOException;
 
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,6 +20,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,73 +34,51 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule());
 
-    @Override
-    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
+@Override
+protected void doFilterInternal(
+        @NonNull HttpServletRequest request, 
+        @NonNull HttpServletResponse response, 
+        @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String authorization = request.getHeader("Authorization");
+    final String authorization = request.getHeader("Authorization");
 
-        // MODIFICACIÓN 1: Tolerancia a ausencias de token y strings "null" provenientes del front
-        if (authorization == null || !authorization.startsWith("Bearer ") || 
-            authorization.equalsIgnoreCase("Bearer null") || authorization.trim().length() <= 7) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        String token = authorization.substring(7);
-        String username;
-
-        try {
-            username = jwtService.getUsername(token);
-        } catch (JwtValidationException e) {
-            log.warn("JWT inválido recibido: {}", e.getMessage());
-            
-            // MODIFICACIÓN 2: No cortamos el flujo abruptamente. Dejamos que pase la petición.
-            // Si la ruta es protegida, Spring Security devolverá el 403 de forma nativa.
-            // Si la ruta es pública (/check-session), llegará al controller para responder según tu lógica.
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        UserDetails userDetails;
-        try {
-            userDetails = userDetailsService.loadUserByUsername(username);
-        } catch (UsernameNotFoundException e) {
-            log.warn("El usuario del token ya no existe: {}", username);
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-        );
-
-        authentication.setDetails(
-                new WebAuthenticationDetailsSource()
-                        .buildDetails(request)
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        // =========================================================================
-        // RENOVACIÓN DE TOKEN: Si está autenticado, envía un token con 10 minutos nuevos
-        // =========================================================================
-        try {
-            String tokenFresco = jwtService.generateToken(userDetails);
-            response.setHeader("Refresh-Token", tokenFresco);
-        } catch (Exception e) {
-            log.error("Error al generar el Sliding Token: {}", e.getMessage());
-        }
-        // =========================================================================
-
+    // 1. Tolerancia a ausencias de token y strings null (Dejar pasar si no hay intención de autenticarse)
+    // Dejamos pasar con doFilter para que endpoints públicos como /login funcionen.
+    if (authorization == null 
+            || !authorization.startsWith("Bearer ") 
+            || authorization.equalsIgnoreCase("Bearer null") 
+            || authorization.trim().length() <= 7) {
+        
         filterChain.doFilter(request, response);
+        return; // Detiene la ejecución de este filtro de manera limpia
     }
+
+    final String jwt = authorization.substring(7);
+
+    try {
+        // 2. Intentamos extraer el usuario del Token utilizando JwtService
+        final String username = jwtService.getUsername(jwt);
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities()
+            );
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
+
+        // Si todo sale bien, continuamos con la cadena de filtros 
+        filterChain.doFilter(request, response);
+
+    } catch (JwtValidationException e) {
+        // método privado para pintar el JSON estructurado con estado 401
+        writeUnauthorizedResponse(response, request, e.getMessage());
+        
+        // NO llamamos a filterChain.doFilter(). Cortamos el flujo aquí de forma segura.
+        return; 
+    }
+}
 
     private void writeUnauthorizedResponse(HttpServletResponse response, HttpServletRequest request, String message) throws IOException {
         ErrorResponseDto errorBody = ErrorResponseDto.of(

@@ -65,14 +65,14 @@
                     <div class="form-divider"></div>
 
                     <div class="section-header" style="margin-top: 20px; border-bottom: none; padding-bottom: 0;">
-                        <h2>Control de Estado (Eliminación Lógica)</h2>
+                        <h2>Control de Estado</h2>
                     </div>
 
                     <div class="form-group">
-                        <label for="user-status">Habilitación de Cuenta (Boolean: active)</label>
+                        <label for="user-status">Habilitación de Cuenta</label>
                         <select id="user-status" class="admin-select">
                             <option value="true">true - Cuenta Activa (Permite operar)</option>
-                            <option value="false">false - Cuenta Desactivada / Bloqueada (Baja Lógica)</option>
+                            <option value="false">false - Cuenta Desactivada / Bloqueada</option>
                         </select>
                         <p class="card-caption" style="margin-top: 5px;">Al pasar el valor a 'false', el usuario sufrirá una baja lógica perdiendo el acceso a Alkywall de inmediato.</p>
                     </div>
@@ -89,7 +89,6 @@
                 </form>
             </section>
 
-            <!-- Bloque Derecho: Resumen financiero específico de la Billetera (Solo Lectura) -->
             <section class="categories-wrapper" style="display: flex; flex-direction: column; gap: 20px;">
                 <div class="section-header">
                     <h2>Métricas de Billetera</h2>
@@ -124,7 +123,6 @@
         </div>
     </div>
 
-    <!-- 3. Lógica JavaScript para procesar la lectura inicial y el PUT/PATCH del formulario -->
     <script src="admin-user-details.js"></script>
 </body>
 </html>

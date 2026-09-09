@@ -12,7 +12,7 @@ const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
         return;
     }
 
-    // 2. 🛡️ ESCUDO DE ROL EXCLUSIVO: Validamos localmente tu ROLE_ADMIN
+    // Validamos localmente tu ROLE_ADMIN
     try {
         const partesToken = token.split('.');
         
@@ -41,7 +41,6 @@ const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
         }
         
     } catch (e) {
-        console.error('Error crítico al decodificar y validar el JWT:', e);
         localStorage.removeItem('token');
         window.location.href = 'index.html';
         return;
@@ -58,7 +57,6 @@ const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
         });
 
         if (response.status === 401 || response.status === 403) {
-            console.warn('Sesión de administrador inválida o expirada en el servidor.');
             localStorage.removeItem('token'); 
             window.location.href = 'index.html';
             return;
@@ -70,7 +68,6 @@ const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
         document.body.style.display = 'block';
 
     } catch (error) {
-        console.error('Error de conexión con la API:', error);
         window.location.href = 'index.html';
     }
 })();
