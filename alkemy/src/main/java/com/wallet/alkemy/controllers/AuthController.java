@@ -46,22 +46,22 @@ public class AuthController {
 /** Activa la cuenta del usuario y gestiona la redirección física en el protocolo HTTP */
 public ResponseEntity<Void> activateAccount(@RequestParam("token") String token) {
     HttpHeaders headers = new HttpHeaders();
-    
+
     try {
         // Ejecutamos la lógica de negocio pura en el servicio
         boolean cuentaActivadaAhora = authService.activateAccount(token);
-        
+
         if (cuentaActivadaAhora) {
             // ÉXITO PRIMARIO: Cuenta activada por primera vez
-            headers.setLocation(URI.create("http://127.0.0.1:5500/frontend/login.html?activado=exito"));
+            headers.setLocation(URI.create("http://127.0.0.1:5500/login.html?activado=exito"));
         } else {
             // ÉXITO SECUNDARIO: La cuenta ya se encontraba activa previamente
-            headers.setLocation(URI.create("http://127.0.0.1:5500/frontend/login.html?activado=ya_activado"));
+            headers.setLocation(URI.create("http://127.0.0.1:5500/login.html?activado=ya_activado"));
         }
-        
+
     } catch (Exception e) {
         // FALLO CONTROLADO: El token expiró o la firma digital es inválida
-        headers.setLocation(URI.create("http://127.0.0.1:5500/frontend/login.html?activado=error"));
+        headers.setLocation(URI.create("http://127.0.0.1:5500/login.html?activado=error"));
     }
 
     // Enviamos el código de redirección HTTP 302 estándar

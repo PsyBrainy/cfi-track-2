@@ -23,13 +23,13 @@ export async function initDashboard() {
             }).join(''));
             
             const tokenData = JSON.parse(jsonPayload);
-            const emailUser = tokenData.sub || "Facundo";
+            const emailUser = tokenData.sub || "!";
             const nombreMapeado = emailUser.split('@');
             const nombreCapitalizado = nombreMapeado.charAt(0).toUpperCase() + nombreMapeado.slice(1);
             
             document.getElementById('user-greeting').textContent = `¡Hola, ${nombreCapitalizado}!`;
         } catch (e) {
-            document.getElementById('user-greeting').textContent = "¡Hola, Facundo!";
+            document.getElementById('user-greeting').textContent = "¡Hola!";
         }
 
         // 2. Consumimos el saldo real desde tu endpoint /api/account/balance

@@ -8,6 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-init-sql: SET TIME ZONE 'UTC'
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,6 +18,17 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           time_zone: UTC
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: valleshieldar@gmail.com
+    password: vsyylhybioocrcuh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 server:
   port: 8080
   address: 0.0.0.0
