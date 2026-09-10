@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import com.wallet.alkemy.config.tableUserRole;
 import com.wallet.alkemy.dto.LoginRequest;
 import com.wallet.alkemy.dto.LoginResponseDTO;
 import com.wallet.alkemy.dto.UserDTO;
+import com.wallet.alkemy.exception.JwtValidationException;
 import com.wallet.alkemy.models.tableUser;
 import com.wallet.alkemy.repository.UserRepository;
 
@@ -31,6 +34,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final BankAccountService bankAccountService;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -74,31 +78,92 @@ public class AuthService {
 
         userRepository.save(user);
         bankAccountService.createBankAccount(user);
+        // 1. Generamos el Token de Activación único
+        String activationToken = jwtService.generateActivationToken(user.getEmail());
+
+        // 2. Enviamos el correo 
+        try {
+            emailService.sendActivationEmail(user.getEmail(), user.getName(), activationToken);
+        } catch (Exception e) {
+            // Esto provocará el Rollback de la base de datos si el correo falla
+            throw new RuntimeException("Error al enviar el email de activación. Registro cancelado.", e);
+        }
 
         response.put("status", "success");
-        response.put("data", Map.of("email", user.getEmail()));
+        response.put("message", "Usuario registrado. Por favor, verifica tu correo electrónico para activar la cuenta.");
+        response.put("data", Map.of("email", user.getEmail(), "activationToken", activationToken));
 
         return ResponseEntity.ok(response);
     }
 
-    /** Authenticates a user and returns a signed JWT. */
-    public LoginResponseDTO login(LoginRequest request) {
-        userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Email o contraseña inválidos"));
+    /**
+     * Valida el token de activación y cambia el estado del usuario a activo.
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean activateAccount(String token) {
+        try {
+            // 1. Extraer el email del token (Valida automáticamente expiración y firma)
+            String email = jwtService.getUsername(token);
 
-        Authentication authentication = authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken.unauthenticated(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+            // 2. Buscar al usuario
+            tableUser user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new JwtValidationException("Usuario no encontrado asociado a este token."));
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(userDetails);
+            // 3. Si ya estaba activo, retornamos false para indicar que no requirió cambios
+            if (user.isActive()) {
+                return false;
+            }
 
-        LoginResponseDTO response = new LoginResponseDTO();
-        response.setToken(token);
+            // 4. Cambiar el estado a activo
+            user.setActive(true);
+            userRepository.save(user);
+            return true;
 
-        return response;
+        } catch (JwtValidationException e) {
+            // Propagamos el fallo de validación del token hacia el controlador
+            throw e;
+        }
     }
+
+    /**
+     * Authenticates a user and returns a signed JWT.
+     */
+    public LoginResponseDTO login(LoginRequest request) {
+        // 1. Validamos la autenticación de Spring Security primero en un bloque controlado
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    UsernamePasswordAuthenticationToken.unauthenticated(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+
+            // 2. Si la contraseña es correcta, extraemos los datos del usuario de la base de datos
+            tableUser user = userRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("El correo electrónico no se encuentra registrado"));
+
+            // 3. Verificamos si la cuenta está activa
+            if (!user.isActive()) {
+                throw new DisabledException("La cuenta se encuentra inactiva. Por favor, confirma tu email, o contactate con nosotros.");
+            }
+
+            // 4. Si todo es correcto, generamos el token de acceso exitoso
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token = jwtService.generateToken(userDetails);
+
+            LoginResponseDTO response = new LoginResponseDTO();
+            response.setToken(token);
+
+            return response;
+
+        } catch (BadCredentialsException e) {
+            boolean existeEmail = userRepository.findByEmail(request.getEmail()).isPresent();
+            if (!existeEmail) {
+                throw new UsernameNotFoundException("El correo electrónico no se encuentra registrado");
+            } else {
+                throw new BadCredentialsException("La contraseña ingresada es incorrecta");
+            }
+        }
+    }
+
 }

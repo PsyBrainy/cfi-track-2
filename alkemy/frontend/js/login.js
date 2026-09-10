@@ -3,10 +3,11 @@ import { BaseUrl } from './config.js';
 import { setToken } from './authState.js';
 
 export function initLogin() {
-  // =========================================================================
-  // NUEVO: GUARDIÁN AFK - Captura si el usuario viene expulsado por inactividad
-  // =========================================================================
   const urlParams = new URLSearchParams(window.location.search);
+
+  // =========================================================================
+  // GUARDIÁN AFK - Captura si el usuario viene expulsado por inactividad
+  // =========================================================================
   if (urlParams.get('motivo') === 'expirado') {
     Swal.fire({
       icon: 'warning',
@@ -15,9 +16,49 @@ export function initLogin() {
       confirmButtonText: 'Aceptar',
       confirmButtonColor: '#2563eb'
     }).then(() => {
-      // Limpia el parámetro de la URL (?motivo=expirado) para evitar duplicados
       window.history.replaceState({}, document.title, window.location.pathname);
     });
+  }
+
+  // =========================================================================
+  // CAPTURA DE RESULTADO DE ACTIVACIÓN DESDE EL EMAIL (ALKYWALL)
+  // =========================================================================
+  if (urlParams.get('activado')) {
+    const estadoActivacion = urlParams.get('activado');
+
+    if (estadoActivacion === 'exito') {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Cuenta Activada!',
+        text: 'Tu correo electrónico ha sido verificado con éxito. Ya podés ingresar a tu billetera Alkywall y mover tu dinero.',
+        confirmButtonText: 'Comenzar',
+        confirmButtonColor: '#0F766E'
+      }).then(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      });
+
+    } else if (estadoActivacion === 'ya_activado' || estadoActivacion === 'ya-activado') {
+      Swal.fire({
+        icon: 'info',
+        title: 'Cuenta ya Verificada',
+        text: 'Esta cuenta ya había sido activada anteriormente. Podés iniciar sesión de forma normal.',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#111C3A'
+      }).then(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      });
+
+    } else if (estadoActivacion === 'error') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Enlace Expirado o Inválido',
+        text: 'El token de verificación ha caducado (vence a las 24 horas) o es incorrecto. Por favor, registrate de nuevo o contactá a soporte.',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#EF4444'
+      }).then(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      });
+    }
   }
   // =========================================================================
 
@@ -30,7 +71,6 @@ export function initLogin() {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // Si venimos de un registro exitoso, precargamos el email (?email=)
   const params = new URLSearchParams(window.location.search);
   const emailParam = params.get('email');
   if (emailParam && loginEmailInput) {
@@ -94,63 +134,52 @@ export function initLogin() {
         password: loginPasswordInput.value
       })
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json().then((data) => {
-            // Limpieza absoluta de residuos de sesiones previas (como strings "null")
-            localStorage.clear();
-
-            // 1. Guardamos el token en el estado de la aplicación
-            setToken(data.token);
-            console.log('Login exitoso, token guardado en localStorage');
-
-            // Guardamos adicionalmente la clave que usa el panel administrativo de forma explícita
-            localStorage.setItem('admin_token', data.token);
-
-            // =========================================================================
-            // 🔄 REDIRECCIÓN INTELIGENTE BASADA EN ROLES (JWT) - CORREGIDA
-            // =========================================================================
-            try {
-              const partesToken = data.token.split('.');
-              if (partesToken.length === 3) {
-                const payloadRaw = partesToken[1];
-                const base64 = payloadRaw.replace(/-/g, '+').replace(/_/g, '/');
-                
-                const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-                    return '%' + ('0' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-                
-                const payloadDecoded = JSON.parse(jsonPayload);
-
-                // CORRECCIÓN: Buscamos tanto 'ADMIN' como 'ROLE_ADMIN' de forma tolerante
-                const authorities = payloadDecoded.authorities || [];
-                const esAdmin = authorities.includes('ADMIN') || authorities.includes('ROLE_ADMIN');
-
-                if (esAdmin) {
-                  console.log('🛡️ Administrador legítimo detectado. Direccionando al Panel de Control...');
-                  window.location.replace('admin-dashboard.html'); // Evita acumular historial corrupto
-                  return;
-                }
+    .then((response) => {
+      if (response.ok) {
+        return response.json().then((data) => {
+          localStorage.clear();
+          setToken(data.token);
+          localStorage.setItem('token', data.token);
+          
+          try {
+            const partesToken = data.token.split('.');
+            if (partesToken.length === 3) {
+              const payloadRaw = partesToken[1];
+              const base64 = payloadRaw.replace(/-/g, '+').replace(/_/g, '/');
+              const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                  return '%' + ('0' + c.charCodeAt(0).toString(16)).slice(-2);
+              }).join(''));
+              
+              const payloadDecoded = JSON.parse(jsonPayload);
+              const authorities = payloadDecoded.authorities || [];
+              const esAdmin = authorities.includes('ADMIN') || authorities.includes('ROLE_ADMIN');
+              
+              if (esAdmin) {
+                window.location.replace('admin-dashboard.html');
+                return;
               }
-            } catch (error) {
-              console.error('Error procesando el rol del token tras login:', error);
             }
+          } catch (error) {
+            console.error('Error procesando el rol del token tras login:', error);
+          }
+          window.location.replace('dashboard.html');
+        });
+      }
 
-            // Destino por defecto para usuarios comunes o fallas de lectura
-            console.log('👥 Cliente estándar detectado. Direccionando a la billetera...');
-            window.location.replace('dashboard.html');
-            // =========================================================================
-          });
+      return response.json().then((errorData) => {
+        if (errorData && errorData.message) {
+          throw new Error(errorData.message);
+        } else {
+          throw new Error('Email o contraseña incorrectos.');
         }
-
-        if (response.status === 401 || response.status === 403) {
-          mostrarFeedback('Email o contraseña incorrectos.');
-          return;
-        }
-        mostrarFeedback('Ocurrió un error al iniciar sesión. Intentá de nuevo.');
-      })
-      .catch(() => {
-        mostrarFeedback('No se pudo conectar con el servidor.');
       });
+    })
+    .catch((error) => {
+      if (error && error.message && error.message !== "Failed to fetch") {
+        mostrarFeedback(error.message);
+      } else {
+        mostrarFeedback('No se pudo conectar con el servidor.');
+      }
+    });
   });
 }

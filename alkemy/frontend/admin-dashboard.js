@@ -3,7 +3,6 @@
  * Gestión de usuarios y comunicación con la API de Alkywall
  */
 
-// Configuración de los endpoints de tu backend
 const API_BASE_URL = 'http://localhost:8080/api/admin'; 
 
 // Variables globales de estado local
@@ -15,21 +14,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initDashboard();
 });
 
-/**
- * Inicializa las funciones del panel validando el token contra el backend
- */
 async function initDashboard() {
-    const token = localStorage.getItem('admin_token');
+    // 🎯 CORRECCIÓN QUIRÚRGICA: Cambiado de 'admin_token' a 'token' para alinearse con tokenCheck.js
+    const token = localStorage.getItem('token');
 
     // 1. Verificación local rápida para no hacer peticiones innecesarias si no hay sesión
     if (!token || token === "null" || token === "undefined") {
-        window.location.href = 'login.html'; // Cambiá por el nombre de tu archivo de login
+        window.location.href = 'login.html';
         return;
     }
 
     // 2. Consulta de validación al endpoint de revisión de sesión
     try {
-        // Asume que tu /check-session está bajo la raíz o auth. Ajustá la URL si es necesario.
         const response = await fetch('http://localhost:8080/api/auth/check-session', { 
             method: 'GET',
             headers: {
@@ -43,7 +39,6 @@ async function initDashboard() {
         }
 
         // 3. Si el estado es OK (200), el administrador es válido y cargamos el panel
-        console.log("Autenticación de administrador verificada con éxito.");
         
         // Ejecutamos la carga de datos protegida
         obtenerUsuariosDeBackend();
@@ -59,8 +54,7 @@ async function initDashboard() {
 
     } catch (error) {
         console.error('Acceso denegado:', error);
-        localStorage.removeItem('admin_token'); // Limpiamos el token inválido o expirado
-        alert("Tu sesión ha expirado o no tienes permisos de administrador. Por favor, vuelve a iniciar sesión.");
+        localStorage.removeItem('token'); // 🎯 CORRECCIÓN: Limpiamos la clave correcta
         window.location.href = 'login.html'; // Redirección forzada de seguridad
     }
 }
@@ -76,8 +70,8 @@ async function obtenerUsuariosDeBackend() {
             url += `?email=${encodeURIComponent(queryBusqueda)}`;
         }
 
-        // Construcción segura de Headers para evitar enviar strings "null" corruptos
-        const token = localStorage.getItem('admin_token'); 
+        // 🎯 CORRECCIÓN: Lectura de token unificada
+        const token = localStorage.getItem('token'); 
         const headers = {
             'Content-Type': 'application/json'
         };
@@ -159,19 +153,19 @@ function renderizarTablaUsuarios(listaUsuarios) {
 }
 
 /**
- * Envía la actualización de la baja o alta lógica (Boolean) al backend
  * @param {string} idUsuario - ID único del cliente
  * @param {boolean} nuevoEstado - El valor active (true/false) que se guardará
  * @param {string} nombre - Nombre para el mensaje de confirmación
  */
 async function confirmarCambioEstado(idUsuario, nuevoEstado, nombre) {
-    const accionText = nuevoEstado ? 'activar' : 'desactivar (baja lógica)';
+    const accionText = nuevoEstado ? 'activar' : 'desactivar';
     const mensaje = `¿Estás seguro de que deseas ${accionText} la cuenta de ${nombre}?`;
 
     if (!confirm(mensaje)) return;
 
     try {
-        const token = localStorage.getItem('admin_token');
+        // 🎯 CORRECCIÓN: Lectura de token unificada
+        const token = localStorage.getItem('token');
         const headers = {
             'Content-Type': 'application/json'
         };
@@ -182,8 +176,6 @@ async function confirmarCambioEstado(idUsuario, nuevoEstado, nombre) {
         
         // CORRECCIÓN ABSOLUTA: Construcción manual y limpia de la URL de administración
         const urlCompleta = `http://localhost:8080/api/admin/users/${idUsuario}/status`;
-        console.log("Enviando petición a URL real:", urlCompleta);
-
         const response = await fetch(urlCompleta, {
             method: 'PATCH',
             headers: headers,
@@ -193,20 +185,17 @@ async function confirmarCambioEstado(idUsuario, nuevoEstado, nombre) {
         if (!response.ok) {
             throw new Error('El backend rechazó la actualización del estado.');
         }
-
-        alert(`La cuenta ha sido modificada correctamente.`);
         
         // Refrescamos los datos de la pantalla llamando de nuevo a la API
         obtenerUsuariosDeBackend();
 
     } catch (error) {
         console.error('Error al cambiar estado lógico:', error);
-        alert('Hubo un problema al intentar modificar el estado del usuario.');
     }
 }
 
 /**
- * Calcula y renderiza los contadores de las tarjetas informativas superiores
+ * Calculates and renders counters for superior summary cards
  */
 function actualizarTarjetasMetricas(listaUsuarios) {
     const totalCard = document.querySelector('.admin-dashboard-card:nth-child(1) h2, #totalUsersCount');
@@ -267,12 +256,7 @@ function formatearFecha(fechaString) {
  * Utilidad: Permite cerrar sesión limpiando las credenciales de administración
  */
 function cerrarSesion() {
-    localStorage.removeItem('admin_token');
-// MODIFICACIÓN EN LAS LÍNEAS DE REDIRECCIÓN (Aproximadamente líneas 25, 60 y 230)
-// Reemplaza window.location.href = 'login.html'; por:
-
-window.location.href = 'login.html'; // Si el archivo login está en la misma carpeta exacta
-// O si usas subcarpetas estructuradas:
-// window.location.href = '/frontend/login.html'; 
-
+    // 🎯 CORRECCIÓN: Limpieza de la clave unificada
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
 }

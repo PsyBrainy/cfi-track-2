@@ -47,9 +47,10 @@ public class SecurityConfig {
                                 "/api/auth/register",
                                 "/api/auth/login",
                                 "/api/auth/check-session",
-                                "/**/check-session" // CORRECCIÓN: Se le agregó la barra '/' inicial requerida
+                                "/**/check-session",
+                                "/api/auth/activate"
                         ).permitAll()
-                        .requestMatchers("/api/admin/**").permitAll() // Tu dashboard libre temporalmente para pruebas locales
+                        .requestMatchers("/api/admin/**").permitAll() //dashboard libre temporalmente para pruebas locales
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -90,7 +91,7 @@ public class SecurityConfig {
             "http://localhost:5501"
         )); 
         
-        // CORRECCIÓN: Agregado "PATCH" requerido por la API para los cambios de estado lógico
+        //requerido por la API para los cambios de estado lógico
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         
         // Allow standard headers required for JSON and token requests.

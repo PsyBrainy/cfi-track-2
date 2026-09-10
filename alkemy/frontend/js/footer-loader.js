@@ -7,7 +7,6 @@ const URL_LOCAL_DOLAR = `${BaseUrl}/api/public/dolar-rates`;
 document.addEventListener('DOMContentLoaded', () => {
     // 🛡️ REGLA DE EXCLUSIÓN: Si es una ruta de admin, el footer no se genera
     if (window.location.pathname.includes('admin')) {
-        console.log('💼 Ruta de administración de Alkywall detectada. Se omite el Footer global.');
         return;
     }
 
@@ -108,7 +107,6 @@ async function obtenerCotizacionesParaFooter() {
             `;
         }
     } catch (error) {
-        console.error('Error al renderizar el ticker premium:', error);
         tickerContainer.innerHTML = `<span class="ticker-error-text" style="color: #64748b; font-size: 0.85rem;">Servicio de cotizaciones demorado</span>`;
     }
 }

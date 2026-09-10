@@ -35,7 +35,6 @@ public class BankAccountController {
     private final BankAccountService accountService;
     private final TransactionService transactionService;
     
-    // 1. ¡NUEVO! Declaramos el repositorio como final para que Lombok lo inyecte de inmediato
     private final TransactionRepository transactionRepository;
 
     /** Returns the authenticated user's current account balance. */

@@ -1,4 +1,5 @@
 package com.wallet.alkemy.service;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
@@ -25,9 +26,10 @@ public class JwtService {
     private static final String SECRET_KEY = "4A8EB5FEEDCBB2923F600E47AF3D32EC123D017EA8C7CD218A0D36F6D2EB4B3E";
     private static final long TOKEN_EXPIRATION = 1000 * 60 * 5; // Login tokens expire after 5 minutes.
 
-
-    /** Generates a JWT containing the user's authorities. */
-    public String generateToken(UserDetails  userDetails) {
+    /**
+     * Generates a JWT containing the user's authorities.
+     */
+    public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = Map.of("authorities", userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -36,7 +38,9 @@ public class JwtService {
         return generateToken(claims, userDetails.getUsername());
     }
 
-    /** Generates a JWT from custom claims and a subject. */
+    /**
+     * Generates a JWT from custom claims and a subject.
+     */
     public String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -44,8 +48,7 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact()
-                ;
+                .compact();
 
     }
 
@@ -65,7 +68,6 @@ public class JwtService {
                     .getBody();
 
         } catch (ExpiredJwtException e) {
-            // CAMBIO CRÍTICO: Rompe el flujo lanzando la excepción para que el filtro devuelva un 401
             throw new JwtValidationException("El token JWT ha expirado", e);
 
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e) {
@@ -79,15 +81,26 @@ public class JwtService {
         return claimsMapper.apply(allClaims);
     }
 
-    /** Extracts the username from a validated JWT. */
+    /**
+     * Extracts the username from a validated JWT.
+     */
     public String getUsername(String token) {
         return getClaim(token, Claims::getSubject);
 
     }
+    private static final long ACTIVATION_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24; // 24 Horas
 
-//    public List<String> getAuthorities(String token) {
-//        return getClaim(token, claims -> claims.get("authorities", List.class));
-//    }
-
+    /**
+     * token específico para la activación de cuenta
+     */
+    public String generateActivationToken(String email) {
+        return Jwts.builder()
+                .setClaims(Map.of("purpose", "account_activation"))
+                .setSubject(email)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ACTIVATION_TOKEN_EXPIRATION))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
 
 }

@@ -23,13 +23,13 @@ export async function initDashboard() {
             }).join(''));
             
             const tokenData = JSON.parse(jsonPayload);
-            const emailUser = tokenData.sub || "Facundo";
+            const emailUser = tokenData.sub || "!";
             const nombreMapeado = emailUser.split('@');
             const nombreCapitalizado = nombreMapeado.charAt(0).toUpperCase() + nombreMapeado.slice(1);
             
             document.getElementById('user-greeting').textContent = `¡Hola, ${nombreCapitalizado}!`;
         } catch (e) {
-            document.getElementById('user-greeting').textContent = "¡Hola, Facundo!";
+            document.getElementById('user-greeting').textContent = "¡Hola!";
         }
 
         // 2. Consumimos el saldo real desde tu endpoint /api/account/balance
@@ -64,7 +64,6 @@ export async function initDashboard() {
         await cargarDistribucionGastos(token);
 
     } catch (error) {
-        console.error('Error al sincronizar las tablas con el dashboard:', error);
     }
 }
 
@@ -130,7 +129,6 @@ async function cargarActividadReciente(token) {
         });
 
     } catch (error) {
-        console.error('Error cargando actividad reciente e ingresos:', error);
         tbody.innerHTML = `<tr><td colspan="4" class="text-center table-loading" style="color: #ef4444;">Error al conectar con el historial.</td></tr>`;
     }
 }
@@ -184,7 +182,6 @@ async function cargarDistribucionGastos(token) {
         });
 
     } catch (error) {
-        console.error('Error cargando distribución de gastos:', error);
         container.innerHTML = `<div class="table-loading" style="color: #ef4444;">Error al procesar el resumen de la tabla.</div>`;
     }
 }
@@ -231,7 +228,6 @@ function formatDate(fechaStr) {
         return `${fechaFormateada} - ${horaFormateada} hs`;
         
     } catch (error) {
-        console.error("Error al formatear la fecha con Timezone:", error);
         return '-';
     }
 }

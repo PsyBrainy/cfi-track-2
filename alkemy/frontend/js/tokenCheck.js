@@ -1,7 +1,6 @@
 // js/tokenCheck.js
 import { BaseUrl } from './config.js';
 
-// 🔄 NUEVO ENDPOINT: Valida la sesión de forma genérica sin consumir base de datos financieras
 const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
 
 (async function verificarRutaProtegida() {
@@ -40,7 +39,7 @@ const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
         if (!response.ok) throw new Error(`Error: ${response.status}`);
 
         // =========================================================================
-        // 🛡️ 3. NUEVO ESCUDO INVERTIDO: Sacar a los administradores de vistas de usuario
+        // Sacar a los administradores de vistas de usuario
         // =========================================================================
         try {
             const partesToken = token.split('.');
@@ -59,13 +58,11 @@ const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
                 const esAdmin = payloadDecoded.authorities && payloadDecoded.authorities.includes('ROLE_ADMIN');
 
                 if (esAdmin) {
-                    console.warn('⚠️ Un administrador intentó ver una pantalla de cliente común. Redirigiendo...');
                     window.location.href = 'admin-dashboard.html'; // Lo enviamos a su panel correspondiente
-                    return; // Frenamos la ejecución para que no muestre la pantalla de usuario
+                    return;
                 }
             }
         } catch (e) {
-            console.error('Error al evaluar exclusividad de rol administrativo:', e);
             localStorage.removeItem('token');
             window.location.href = 'index.html';
             return;
@@ -73,7 +70,6 @@ const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
         // =========================================================================
 
         // TODO CORRECTO: El token sirve y pertenece a un cliente estándar. Mostramos el panel.
-        console.log('🛡️ Acceso concedido: Sesión verificada con éxito.');
         document.body.style.display = 'block';
 
     } catch (error) {

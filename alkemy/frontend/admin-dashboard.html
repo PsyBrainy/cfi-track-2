@@ -7,16 +7,14 @@
     
     <!-- 1. Tus estilos base del dashboard (Mantienen la estética general) -->
     <link rel="stylesheet" href="dashboard.css">
-    
+    <link rel="stylesheet" href="components/navbar.css">
+
     <!-- 2. Estilos específicos de administración (Encapsulados bajo .alky-admin-panel) -->
     <link rel="stylesheet" href="admin-custom.css">
     <script type="module" src="js/adminTokenCheck.js"></script>
 
 </head>
 <body style="display: none;">
-
-
-    <!-- Contenedor donde se inserta dinámicamente tu barra de navegación global -->
     <div id="global-navbar"></div>
 
     <!-- CONTENEDOR SEGURO: Aislado con .alky-admin-panel para no pisar estilos de tu navbar -->
@@ -83,7 +81,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Este bloque es controlado e insertado dinámicamente por admin-dashboard.js -->
+                        <!-- Este bloque es insertado dinámicamente por admin-dashboard.js -->
                         <tr>
                             <td colspan="5" class="text-center admin-empty-message">
                                 Cargando listado de usuarios...
@@ -97,5 +95,6 @@
 
     <!-- 3. Lógica JavaScript para conectar los endpoints y los filtros con el backend -->
     <script src="admin-dashboard.js"></script>
+    <script type="module" src="js/navbar-loader.js"></script>
 </body>
 </html>
