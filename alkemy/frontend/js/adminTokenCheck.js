@@ -20,7 +20,6 @@ const URL_CHECK_SESSION = `${BaseUrl}/api/auth/check-session`;
             throw new Error('Formato de token inválido.');
         }
 
-        // 🎯 CORRECCIÓN QUIRÚRGICA: Tomamos el índice [1] que es el Payload string
         const payloadRaw = partesToken[1]; 
         const base64 = payloadRaw.replace(/-/g, '+').replace(/_/g, '/');
         

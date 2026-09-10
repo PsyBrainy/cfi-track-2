@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function initDashboard() {
-    const token = localStorage.getItem('admin_token');
+    // 🎯 CORRECCIÓN QUIRÚRGICA: Cambiado de 'admin_token' a 'token' para alinearse con tokenCheck.js
+    const token = localStorage.getItem('token');
 
     // 1. Verificación local rápida para no hacer peticiones innecesarias si no hay sesión
     if (!token || token === "null" || token === "undefined") {
@@ -53,7 +54,7 @@ async function initDashboard() {
 
     } catch (error) {
         console.error('Acceso denegado:', error);
-        localStorage.removeItem('admin_token'); // Limpiamos el token inválido o expirado
+        localStorage.removeItem('token'); // 🎯 CORRECCIÓN: Limpiamos la clave correcta
         window.location.href = 'login.html'; // Redirección forzada de seguridad
     }
 }
@@ -69,8 +70,8 @@ async function obtenerUsuariosDeBackend() {
             url += `?email=${encodeURIComponent(queryBusqueda)}`;
         }
 
-        // Construcción segura de Headers para evitar enviar strings "null" corruptos
-        const token = localStorage.getItem('admin_token'); 
+        // 🎯 CORRECCIÓN: Lectura de token unificada
+        const token = localStorage.getItem('token'); 
         const headers = {
             'Content-Type': 'application/json'
         };
@@ -163,7 +164,8 @@ async function confirmarCambioEstado(idUsuario, nuevoEstado, nombre) {
     if (!confirm(mensaje)) return;
 
     try {
-        const token = localStorage.getItem('admin_token');
+        // 🎯 CORRECCIÓN: Lectura de token unificada
+        const token = localStorage.getItem('token');
         const headers = {
             'Content-Type': 'application/json'
         };
@@ -193,7 +195,7 @@ async function confirmarCambioEstado(idUsuario, nuevoEstado, nombre) {
 }
 
 /**
- * Calcula y renderiza los contadores de las tarjetas informativas superiores
+ * Calculates and renders counters for superior summary cards
  */
 function actualizarTarjetasMetricas(listaUsuarios) {
     const totalCard = document.querySelector('.admin-dashboard-card:nth-child(1) h2, #totalUsersCount');
@@ -254,7 +256,7 @@ function formatearFecha(fechaString) {
  * Utilidad: Permite cerrar sesión limpiando las credenciales de administración
  */
 function cerrarSesion() {
-    localStorage.removeItem('admin_token');
+    // 🎯 CORRECCIÓN: Limpieza de la clave unificada
+    localStorage.removeItem('token');
     window.location.href = 'login.html';
-
 }
